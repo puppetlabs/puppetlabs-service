@@ -31,7 +31,7 @@ def status(provider)
 end
 
 def enable(provider)
-  if provider.enabled?
+  if provider.enabled?.to_s == 'true'
     { status: 'in_sync' }
   else
     provider.enable
@@ -40,7 +40,7 @@ def enable(provider)
 end
 
 def disable(provider)
-  if provider.enabled?
+  if provider.enabled?.to_s == 'true'
     provider.disable
     { status: 'disabled' }
   else
