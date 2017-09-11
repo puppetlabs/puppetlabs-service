@@ -23,7 +23,7 @@ This module requires either Puppet enterprise or Bolt to function.
 
 ## Usage
 
-There are a number of ways to execute the service task. The examples below check the status of the httpd package. 
+There are a number of ways to execute the service task. The examples below check the status of the httpd service. 
 
 VIA PE-console see link_here
 
@@ -75,7 +75,7 @@ ssh -i ~/.ssh/id_rsa-acceptance root@<VMPOOLER HOSTNAME FROM ABOVE>
 
 show the status of the openssl service (use the actual name of your node)
 ```
-puppet task run service --nodes cgx1boldbmbi3vn.delivery.puppetlabs.net action=status package=openssl
+puppet task run service --nodes cgx1boldbmbi3vn.delivery.puppetlabs.net action=status service=httpd
 ```
 
 display help for service
