@@ -48,10 +48,10 @@ def disable(provider)
   end
 end
 
-args = JSON.parse(STDIN.read)
-service = args['service']
-provider = args['provider']
-action = args['action']
+params = JSON.parse(STDIN.read)
+service = params['service']
+provider = params['provider']
+action = params['action']
 
 opts = { name: service }
 opts[:provider] = provider if provider
@@ -63,6 +63,11 @@ begin
   puts result.to_json
   exit 0
 rescue Puppet::Error => e
-  puts({ status: 'failure', error: e.message }.to_json)
+  puts({ status: 'failure',
+         _error: { msg: e.message,
+                   kind: "puppet_error",
+                   details: {}
+                 }
+       }.to_json)
   exit 1
 end
