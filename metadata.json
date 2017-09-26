@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "author": "puppet",
   "summary": "Tasks that manipulate a service",
+  "description": "Tasks that manipulate a service",
   "license": "Apache-2.0",
   "source": "",
   "dependencies": [],
