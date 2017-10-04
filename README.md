@@ -14,16 +14,23 @@
 This module provides the service task. This task allows you to manage and inspect the state of services, including starting, stopping, enabling, and disabling services.
 
 ## Requirements
+This module is compatible with Puppet Enterprise and Puppet Bolt.
 
-This module requires Puppet Enterprise 2017.3 or later to be installed on the machine from which you are running task commands (the controller node). Machines receiving task requests must be Puppet agents.
+Puppet Enterprise 2017.3 or later has to be installed on the machine from which you are running task commands (the controller node). Machines receiving task requests must be Puppet agents.
+OR
+Puppet Bolt 0.3.2 or later has to be installed on the machine from which you are running task commands. Machines receiving task requests must have SSH or WinRM services enabled.
 
 ## Usage
 
 To run a service task, use the task command, specifying the action and the name of the service.
 
-1. On the command line, run `puppet task service <ACTION> <SERVICE_NAME>`.
+* With PE on the command line, run `puppet task run service action=<ACTION> service=<SERVICE_NAME>`.
+* With Bolt on the command line, run `bolt task run service action=<ACTION> service=<SERVICE_NAME>`.
 
-For example, to check the status of the Apache httpd service, run `puppet task service status httpd`
+For example, to check the status of the Apache httpd service, run:
+
+* With PE, run `puppet task run service action=status service=httpd --nodes neptune`
+* With Bolt, run `bolt task run service action=status service=httpd --nodes neptune --modules ~/modules`
 
 You can also run tasks in the PE console. See PE task documentation for complete information.
 
@@ -37,5 +44,5 @@ For a complete list of services that are supported see the Puppet [services](htt
 
 To display help for the service task, run `puppet task show service`
 
-To show help for the task CLI, run `puppet task run --help`
+To show help for the task CLI, run `puppet task run --help` or `bolt task run --help`
 
