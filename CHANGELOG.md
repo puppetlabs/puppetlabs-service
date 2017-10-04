@@ -1,3 +1,9 @@
+## Release 0.1.2
+
+### Fixed
+- Fixed locales project name.
+- Fixed cli description.
+
 ## Release 0.1.1
 This is the initial release of the service task.
 
