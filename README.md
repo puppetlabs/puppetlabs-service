@@ -24,13 +24,13 @@ This module is compatible with Puppet Enterprise and Puppet Bolt.
 
 To run a service task, use the task command, specifying the action and the name of the service.
 
-* With PE on the command line, run `puppet task run service action=<ACTION> service=<SERVICE_NAME>`.
-* With Bolt on the command line, run `bolt task run service action=<ACTION> service=<SERVICE_NAME>`.
+* With PE on the command line, run `puppet task run service action=<ACTION> name=<SERVICE_NAME>`.
+* With Bolt on the command line, run `bolt task run service action=<ACTION> name=<SERVICE_NAME>`.
 
 For example, to check the status of the Apache httpd service, run:
 
-* With PE, run `puppet task run service action=status service=httpd --nodes neptune`
-* With Bolt, run `bolt task run service action=status service=httpd --nodes neptune --modules ~/modules`
+* With PE, run `puppet task run service action=status name=httpd --nodes neptune`
+* With Bolt, run `bolt task run service action=status name=httpd --nodes neptune --modules ~/modules`
 
 You can also run tasks in the PE console. See PE task documentation for complete information.
 

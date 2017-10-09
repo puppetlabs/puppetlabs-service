@@ -49,11 +49,11 @@ def disable(provider)
 end
 
 params = JSON.parse(STDIN.read)
-service = params['service']
+name = params['name']
 provider = params['provider']
 action = params['action']
 
-opts = { name: service }
+opts = { name: name }
 opts[:provider] = provider if provider
 
 begin
