@@ -2,6 +2,7 @@
 
 ### Fixed
 - Readme updates.
+- Service attribute is now name.
 
 ## Release 0.1.2
 
