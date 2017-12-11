@@ -12,6 +12,7 @@ describe 'service task' do
   package_to_use = ''
   before(:all) do
     if fact_on(default, 'osfamily') != 'windows'
+      run_task(task_name: 'service', params: 'action=stop name=sysklogd')
       package_to_use = 'rsyslog'
       apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
     else
