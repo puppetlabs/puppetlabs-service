@@ -12,6 +12,9 @@ describe 'service task' do
   package_to_use = ''
   before(:all) do
     if fact_on(default, 'osfamily') != 'windows'
+      if fact_on(default, 'osfamily') == 'RedHat' && fact_on(default, 'operatingsystemrelease') < '6'
+        run_task(task_name: 'service', params: 'action=stop name=syslog')
+      end
       package_to_use = 'rsyslog'
       apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
     else
@@ -53,11 +56,11 @@ describe 'service task' do
     end
   end
   describe 'disable action' do
-    it 'enable/status a service' do
+    it 'disable/status a service' do
       run_and_expect("action=disable name=#{package_to_use}",
                      [%r{status.*disabled}, %r{#{task_summary_line}}])
       run_and_expect("action=status name=#{package_to_use}",
-                     [%r{status.*running}, %r{enabled.*false}, %r{#{task_summary_line}}])
+                     [%r{enabled.*false}, %r{#{task_summary_line}}])
     end
   end
 end
