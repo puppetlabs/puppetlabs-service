@@ -4,7 +4,7 @@
   "parameters": {
     "action": {
       "description": "The operation (start, stop) to perform on the service",
-      "type": "Enum[start, stop]"
+      "type": "Enum[start, stop, restart]"
     },
     "name": {
       "description": "The name of the service to operate on.",
