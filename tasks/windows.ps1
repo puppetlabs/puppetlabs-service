@@ -13,39 +13,47 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$inSyncStatus = 'in_sync'
-$status = $null
+function Invoke-ServiceAction($Service, $Action)
+{
+  $inSyncStatus = 'in_sync'
+  $status = $null
+
+  switch ($Action)
+  {
+    'start'
+    {
+      if ($Service.Status -eq 'Running') { $status = $InSyncStatus }
+      else { Start-Service $Service }
+    }
+    'stop'
+    {
+      if ($Service.Status -eq 'Stopped') { $status = $InSyncStatus }
+      else { Stop-Service $Service }
+    }
+    'restart'
+    {
+      Restart-Service $Service
+      $status = 'restarted'
+    }
+    # no-op since status always returned
+    'status' { }
+  }
+
+  # user action
+  if ($status -eq $null)
+  {
+    # https://msdn.microsoft.com/en-us/library/system.serviceprocess.servicecontrollerstatus(v=vs.110).aspx
+    # ContinuePending, Paused, PausePending, Running, StartPending, Stopped, StopPending
+    $status = $Service.Status
+    if ($status -eq 'Running') { $status = 'started' }
+  }
+
+  return $status
+}
+
+
 $service = Get-Service -Name $Name
-
-switch ($Action)
-{
-  'start'
-  {
-    if ($service.Status -eq 'Running') { $status = $InSyncStatus }
-    else { Start-Service $service }
-  }
-  'stop'
-  {
-    if ($service.Status -eq 'Stopped') { $status = $InSyncStatus }
-    else { Stop-Service $service }
-  }
-  'restart'
-  {
-    Restart-Service $service
-    $status = 'restarted'
-  }
-  # no-op since status always returned
-  'status' { }
-}
-
-# user action
-if ($status -eq $null)
-{
-  # https://msdn.microsoft.com/en-us/library/system.serviceprocess.servicecontrollerstatus(v=vs.110).aspx
-  # ContinuePending, Paused, PausePending, Running, StartPending, Stopped, StopPending
-  $status = $service.Status
-  if ($status -eq 'Running') { $status = 'started' }
-}
+$status = Invoke-ServiceAction -Service $service -Action $action
 
 # TODO: could use ConvertTo-Json, but that requires PS3
 # if embedding in literal, should make sure Name / Status doesn't need escaping
