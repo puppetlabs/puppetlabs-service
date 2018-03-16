@@ -51,9 +51,10 @@ function Invoke-ServiceAction($Service, $Action)
   return $status
 }
 
-
-$service = Get-Service -Name $Name
-$status = Invoke-ServiceAction -Service $service -Action $action
+try
+{
+  $service = Get-Service -Name $Name
+  $status = Invoke-ServiceAction -Service $service -Action $action
 
 # TODO: could use ConvertTo-Json, but that requires PS3
 # if embedding in literal, should make sure Name / Status doesn't need escaping
@@ -66,3 +67,19 @@ Write-Host @"
   "startType"   : "$($service.StartType)"
 }
 "@
+}
+catch
+{
+  Write-Host @"
+  {
+    "status"  : "failure",
+    "name"    : "$Name",
+    "action"  : "$Action",
+    "_error"  : {
+      "msg" : "Unable to perform '$Action' on '$Name': $($_.Exception.Message)",
+      "kind": "powershell_error",
+      "details" : {}
+    }
+  }
+"@
+}
