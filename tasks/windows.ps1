@@ -15,56 +15,41 @@ $ErrorActionPreference = 'Stop'
 
 function Invoke-ServiceAction($Service, $Action)
 {
-  $inSyncStatus = 'in_sync'
-  $status = $null
-
   switch ($Action)
   {
-    'start'
-    {
-      if ($Service.Status -eq 'Running') { $status = $InSyncStatus }
-      else { Start-Service $Service }
-    }
-    'stop'
-    {
-      if ($Service.Status -eq 'Stopped') { $status = $InSyncStatus }
-      else { Stop-Service $Service }
-    }
-    'restart'
-    {
-      Restart-Service $Service
-      $status = 'restarted'
-    }
+    'start' { Start-Service $Service }
+    'stop' { Stop-Service $Service }
+    'restart' { Restart-Service $Service }
     # no-op since status always returned
     'status' { }
   }
 
-  # user action
-  if ($status -eq $null)
-  {
-    # https://msdn.microsoft.com/en-us/library/system.serviceprocess.servicecontrollerstatus(v=vs.110).aspx
-    # ContinuePending, Paused, PausePending, Running, StartPending, Stopped, StopPending
-    $status = $Service.Status
-    if ($status -eq 'Running') { $status = 'started' }
-  }
+  # https://msdn.microsoft.com/en-us/library/system.serviceprocess.servicecontrollerstatus(v=vs.110).aspx
+  # ContinuePending, Paused, PausePending, Running, StartPending, Stopped, StopPending
+  $status = $Service.Status
+  if ($status -eq 'Running') { $status = 'Started' }
 
   return $status
 }
 
 try
 {
+  $initialStatus = 'unavailable'
   $service = Get-Service -Name $Name
+  $initialStatus = $Service.Status
+  if ($initialStatus -eq 'Running') { $initialStatus = 'Started' }
   $status = Invoke-ServiceAction -Service $service -Action $action
 
 # TODO: could use ConvertTo-Json, but that requires PS3
 # if embedding in literal, should make sure Name / Status doesn't need escaping
 Write-Host @"
 {
-  "name"        : "$($service.Name)",
-  "action"      : "$Action",
-  "displayName" : "$($service.DisplayName)",
-  "status"      : "$status",
-  "startType"   : "$($service.StartType)"
+  "name"          : "$($service.Name)",
+  "action"        : "$Action",
+  "displayName"   : "$($service.DisplayName)",
+  "initialStatus" : "$initialStatus",
+  "status"        : "$status",
+  "startType"     : "$($service.StartType)"
 }
 "@
 }
@@ -76,7 +61,7 @@ catch
     "name"    : "$Name",
     "action"  : "$Action",
     "_error"  : {
-      "msg" : "Unable to perform '$Action' on '$Name': $($_.Exception.Message)",
+      "msg" : "Unable to perform '$Action' on '$Name' ($initialStatus): $($_.Exception.Message)",
       "kind": "powershell_error",
       "details" : {}
     }

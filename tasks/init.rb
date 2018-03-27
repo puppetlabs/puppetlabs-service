@@ -3,49 +3,23 @@
 require 'puppet'
 
 def start(provider)
-  if provider.status == :running
-    { status: 'in_sync' }
-  else
-    provider.start
-    { status: 'started' }
-  end
+  provider.start
 end
 
 def stop(provider)
-  if provider.status == :stopped
-    { status: 'in_sync' }
-  else
-    provider.stop
-    { status: 'stopped' }
-  end
+  provider.stop
 end
 
 def restart(provider)
   provider.restart
-
-  { status: 'restarted' }
-end
-
-def status(provider)
-  { status: provider.status, enabled: provider.enabled? }
 end
 
 def enable(provider)
-  if provider.enabled?.to_s == 'true'
-    { status: 'in_sync' }
-  else
-    provider.enable
-    { status: 'enabled' }
-  end
+  provider.enable unless provider.enabled?
 end
 
 def disable(provider)
-  if provider.enabled?.to_s == 'true'
-    provider.disable
-    { status: 'disabled' }
-  else
-    { status: 'in_sync' }
-  end
+  provider.disable if provider.enabled?
 end
 
 params = JSON.parse(STDIN.read)
@@ -59,12 +33,22 @@ opts[:provider] = provider if provider
 begin
   provider = Puppet::Type.type(:service).new(opts).provider
 
-  result = send(action, provider)
+  initialStatus = provider.status
+  send(action, provider) if action != 'status'
+  result = {
+    name: name,
+    action: action,
+    initialStatus: initialStatus,
+    status: provider.status,
+    enabled: provider.enabled?,
+  }
   puts result.to_json
   exit 0
 rescue Puppet::Error => e
   puts({ status: 'failure',
-         _error: { msg: e.message,
+         name: name,
+         action: action,
+         _error: { msg: "Unable to perform '#{action}' on '#{name}': " + e.message,
                    kind: 'puppet_error',
                    details: {} } }.to_json)
   exit 1
