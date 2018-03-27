@@ -1,0 +1,14 @@
+{
+  "description": "Manage the state of Windows services (without a puppet agent)",
+  "input_method": "powershell",
+  "parameters": {
+    "action": {
+      "description": "The operation (start, stop, restart, status) to perform on the service",
+      "type": "Enum[start, stop, restart, status]"
+    },
+    "name": {
+      "description": "The short name of the Windows service to operate on.",
+      "type": "String[1]"
+    }
+  }
+}
