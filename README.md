@@ -11,7 +11,8 @@
 
 ## Description
 
-This module provides the service task. This task allows you to manage and inspect the state of services, including starting, stopping, enabling, and disabling services.
+This module provides services tasks, There are two kinds of tasks. The default task: that uses the puppet agent on the target node to manage and inspect the state of services. The linux task: that manipulates services on a linux derivative without a puppet agent installed on the target node.
+
 
 ## Requirements
 This module is compatible with Puppet Enterprise and Puppet Bolt.
@@ -24,6 +25,8 @@ This module is compatible with Puppet Enterprise and Puppet Bolt.
 
 To run a service task, use the task command, specifying the action and the name of the service.
 
+### Default task
+
 * With PE on the command line, run `puppet task run service action=<ACTION> name=<SERVICE_NAME>`.
 * With Bolt on the command line, run `bolt task run service action=<ACTION> name=<SERVICE_NAME>`.
 
@@ -31,6 +34,28 @@ For example, to check the status of the Apache httpd service, run:
 
 * With PE, run `puppet task run service action=status name=httpd --nodes neptune`
 * With Bolt, run `bolt task run service action=status name=httpd --nodes neptune --modulepath ~/modules`
+
+### Linux task
+
+* With PE on the command line, run `puppet task run service::linux action=<ACTION> name=<SERVICE_NAME>`.
+* With Bolt on the command line, run `bolt task run service::linux action=<ACTION> name=<SERVICE_NAME>`.
+
+For example, to check the status of the Apache httpd service, run:
+
+* With PE, run `puppet task run service::linux action=status name=httpd --nodes neptune`
+* With Bolt, run `bolt task run service::linux action=status name=httpd --nodes neptune --modulepath ~/modules`
+
+You can also run tasks in the PE console. See PE task documentation for complete information.
+
+### Windows task
+
+* With PE on the command line, run `puppet task run service::windows action=<ACTION> name=<SERVICE_NAME>`.
+* With Bolt on the command line, run `bolt task run service::windows action=<ACTION> name=<SERVICE_NAME>`.
+
+For example, to check the status of the lmhosts service, run:
+
+* With PE, run `puppet task run service::windows action=status name=lmhosts --nodes neptune`
+* With Bolt, run `bolt task run service::windows action=status name=lmhosts --nodes neptune --modulepath ~/modules`
 
 You can also run tasks in the PE console. See PE task documentation for complete information.
 
@@ -45,4 +70,3 @@ For a complete list of services that are supported see the Puppet [services](htt
 To display help for the service task, run `puppet task show service`
 
 To show help for the task CLI, run `puppet task run --help` or `bolt task run --help`
-

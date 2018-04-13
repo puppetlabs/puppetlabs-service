@@ -1,3 +1,12 @@
+## Release 0.3.0
+### Summary
+This release adds the ability to manage services without the puppet-agent being installed on the remote host.
+
+### Added
+- Agentless windows service management
+- Agentless linux service management
+- Linux task service restart
+
 ## Release 0.2.0
 ### Summary
 This release uses the PDK convert functionality which in return makes the module PDK compliant. It also includes a roll up of maintenance changes.
