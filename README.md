@@ -47,6 +47,18 @@ For example, to check the status of the Apache httpd service, run:
 
 You can also run tasks in the PE console. See PE task documentation for complete information.
 
+### Windows task
+
+* With PE on the command line, run `puppet task run service::windows action=<ACTION> name=<SERVICE_NAME>`.
+* With Bolt on the command line, run `bolt task run service::windows action=<ACTION> name=<SERVICE_NAME>`.
+
+For example, to check the status of the lmhosts service, run:
+
+* With PE, run `puppet task run service::windows action=status name=lmhosts --nodes neptune`
+* With Bolt, run `bolt task run service::windows action=status name=lmhosts --nodes neptune --modulepath ~/modules`
+
+You can also run tasks in the PE console. See PE task documentation for complete information.
+
 ## Reference
 
 To view the available actions and parameters, on the command line, run `puppet task show service` or see the service module page on the [Forge](https://forge.puppet.com/puppetlabs/service/tasks).
