@@ -1,4 +1,3 @@
-inux.sh: line 19: local: can only be used in a function
 #!/bin/bash
 
 action="$PT_action"
