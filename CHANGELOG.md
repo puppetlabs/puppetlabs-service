@@ -1,3 +1,10 @@
+## Release 0.3.1
+### Summary
+Fixes a bug with the service::linux agentless task failing on the PE orchestratior.
+
+### Fixed
+- Stray line breaking service::linux task
+
 ## Release 0.3.0
 ### Summary
 This release adds the ability to manage services without the puppet-agent being installed on the remote host.
