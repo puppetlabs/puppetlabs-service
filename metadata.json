@@ -43,5 +43,5 @@
   "description": "Tasks that manipulate a service",
   "pdk-version": "1.4.1",
   "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
-  "template-ref": "1.4.1-0-g52adbbb"
+  "template-ref": "remotes/origin/master-0-gd2a9165"
 }
