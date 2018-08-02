@@ -70,3 +70,5 @@ For a complete list of services that are supported see the Puppet [services](htt
 To display help for the service task, run `puppet task show service`
 
 To show help for the task CLI, run `puppet task run --help` or `bolt task run --help`
+
+Manamana
