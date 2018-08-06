@@ -29,6 +29,14 @@ describe 'service task' do
                      [%r{enabled.*true}, %r{#{task_summary_line}}])
     end
   end
+  describe 'restart action' do
+    it 'restart/status a service' do
+      run_and_expect("action=restart name=#{package_to_use}",
+                     [%r{status.*restarted}, %r{#{task_summary_line}}])
+      run_and_expect("action=status name=#{package_to_use}",
+                     [%r{status.*running}, %r{enabled.*true}, %r{#{task_summary_line}}])
+    end
+  end
   describe 'stop action' do
     it 'stop/status a service' do
       run_and_expect("action=stop name=#{package_to_use}", [%r{status.*(in_sync|stopped)}, %r{#{task_summary_line}}])
@@ -45,14 +53,6 @@ describe 'service task' do
       if fact_on(default, 'osfamily') != 'Debian'
         run_and_expect("action=status name=#{package_to_use}", [%r{status.*running}, %r{enabled.*true}, %r{#{task_summary_line}}])
       end
-    end
-  end
-  describe 'restart action' do
-    it 'restart/status a service' do
-      run_and_expect("action=restart name=#{package_to_use}",
-                     [%r{status.*restarted}, %r{#{task_summary_line}}])
-      run_and_expect("action=status name=#{package_to_use}",
-                     [%r{status.*running}, %r{enabled.*true}, %r{#{task_summary_line}}])
     end
   end
   describe 'disable action' do
