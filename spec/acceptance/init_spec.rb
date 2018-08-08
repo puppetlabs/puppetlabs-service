@@ -19,6 +19,7 @@ describe 'service task' do
       apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
     else
       package_to_use = 'W32Time'
+      run_and_expect("action=start name=#{package_to_use}", [%r{status.*(in_sync|started)}, %r{#{task_summary_line}}])
     end
   end
   describe 'enable action' do
