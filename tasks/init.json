@@ -3,7 +3,7 @@
   "input_method": "stdin",
   "parameters": {
     "action": {
-      "description": "The operation (start, stop, restart, enable, disable, status) to perform on the service",
+      "description": "The operation (start, stop, restart, enable, disable, status) to perform on the service.",
       "type": "Enum[start, stop, restart, enable, disable, status]"
     },
     "name": {
@@ -11,8 +11,13 @@
       "type": "String[1]"
     },
     "provider": {
-      "description": "The provider to use to manage or inspect the service, defaults to the system service manager",
+      "description": "The provider to use to manage or inspect the service, defaults to the system service manager. Only used when the 'puppet-agent' feature is available on the target so we can leverage Puppet.",
       "type": "Optional[String[1]]"
     }
-  }
+  },
+  "implementations": [
+    {"name": "init.rb", "requirements": ["puppet-agent"]},
+    {"name": "windows.ps1", "requirements": ["powershell"], "input_method": "powershell"},
+    {"name": "linux.sh", "requirements": ["shell"], "input_method": "environment"}
+  ]
 }
