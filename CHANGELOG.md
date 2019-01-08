@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [0.5.0](https://github.com/puppetlabs/puppetlabs-service/tree/0.5.0) (2019-01-07)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.4.0...0.5.0)
+
+### Fixed
+
+- pdksync - \(FM-7655\) Fix rubygems-update for ruby \< 2.3 [\#62](https://github.com/puppetlabs/puppetlabs-service/pull/62) ([tphoney](https://github.com/tphoney))
+
+### Added
+
+- \(MODULES-8391\) Enable implementations on the init task and hide others [\#61](https://github.com/puppetlabs/puppetlabs-service/pull/61) ([MikaelSmith](https://github.com/MikaelSmith))
+
 ## [0.4.0](https://github.com/puppetlabs/puppetlabs-service/tree/0.4.0) (2018-09-28)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.3.1...0.4.0)
