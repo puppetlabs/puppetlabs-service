@@ -74,6 +74,4 @@ EOM
   end
 end
 
-task :task_acceptance => [:spec_prep, :beaker] do
-  # nothing to do
-end
+task :task_acceptance => [:spec_prep, :beaker]
