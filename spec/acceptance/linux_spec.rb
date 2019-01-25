@@ -17,7 +17,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     it "stop #{package_to_use}" do
       result = task_run('service::linux', 'action' => 'stop', 'name' => package_to_use)
       expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{stop})
+      expect(result[0]['result']['status']).to match(%r{ActiveState=inactive|stop})
     end
   end
 
@@ -25,7 +25,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     it "start #{package_to_use}" do
       result = task_run('service::linux', 'action' => 'start', 'name' => package_to_use)
       expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{start})
+      expect(result[0]['result']['status']).to match(%r{ActiveState=active|running})
     end
   end
 
@@ -33,7 +33,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     it "restart #{package_to_use}" do
       result = task_run('service::linux', 'action' => 'restart', 'name' => package_to_use)
       expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{restart})
+      expect(result[0]['result']['status']).to match(%r{ActiveState=active|running})
     end
   end
 end
