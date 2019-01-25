@@ -1,45 +1,80 @@
 #!/bin/bash
 
-action="$PT_action"
-name="$PT_name"
-service_managers[0]="systemctl"
-service_managers[1]="service"
-service_managers[2]="initctl"
+# TODO: "jq-ify" this
 
 # example cli /opt/puppetlabs/puppet/bin/bolt  task run service::linux action=stop name=ntp --nodes localhost --modulepath /etc/puppetlabs/code/modules --password puppet --user root
 
-check_command_exists() {
-  (which "$1") > /dev/null 2>&1
-  command_exists=$?
-  return $command_exists
+# Exit with an error message and error code, defaulting to 1
+fail() {
+  # Print a message: entry if there were anything printed to stderr
+  if [[ -s $_tmp ]]; then
+    echo "{ \"status\": \"error\", \"message\": \"$(<$_tmp)\" }"
+  else
+    echo '{ "status": "error" }'
+  fi
+
+  exit ${2:-1}
 }
 
-for service_manager in "${service_managers[@]}"
-do
-  check_command_exists "$service_manager"
-  command_exists=$?
-  if [ $command_exists -eq 0 ]; then
-    command_line="$service_manager $action $name"
-    if [ $service_manager == "service" ]; then
-      command_line="$service_manager $name $action"
-    fi
-    output=$($command_line 2>&1)
-    status_from_command=$?
-    # set up our status and exit code
-    if [ $status_from_command -eq 0 ]; then
-      echo "{ \"status\": \"$name $action\" }"
-      exit 0
-    else
-      # initd is special, starting an already started service is an error
-      if [[ $service_manager == "service" && "$output" == *"Job is already running"* ]]; then
-        echo "{ \"status\": \"$name $action\" }"
-        exit 0
-      fi
-      echo "{ \"status\": \"unable to run command '$command_line'\" }"
-      exit $status_from_command
-    fi
+success() {
+  echo "$1"
+  exit 0
+}
+
+# Keep stderr in a temp file.  Easier than `tee` or capturing process substitutions
+_tmp="$(mktemp)"
+exec 2>"$_tmp"
+
+action="$PT_action"
+name="$PT_name"
+service_managers=("systemctl" "service" "initctl")
+
+for s in "${service_managers[@]}"; do
+  if type "$s" &>/dev/null; then
+    available_manager="$s"
+    break
   fi
 done
 
-echo "{ \"status\": \"No service managers found\" }"
-exit 255
+[[ $available_manager ]] || {
+  echo '{ "status": "No service managers found" }'
+  exit 255
+}
+
+case "$available_manager" in
+  # systemd commands don't output anything on success, so follow up with a status command
+  # use the is-active subcommand for concise information
+  "systemctl")
+    if [[ $action != "status" ]]; then
+      "$s" "$action" "$name" || fail
+    fi
+    cmd_out="$("$s" "is-active" "$name")" || fail
+    success "{ \"status\": \"$cmd_out\" }"
+    ;;
+
+  # service and initd may return non-zero if the service is already started
+  "service")
+    cmd_out=$("$s" "$name" "$action")
+    ret=$?
+
+    if grep -q "Job is already running" "$_tmp"; then
+      success '{ "status": "active" }'
+    elif (( $ret != 0 )); then
+      fail
+    else
+      success "{ \"status\": \"${cmd_out#* }\" }"
+    fi
+    ;;
+
+  "initctl")
+    cmd_out="$("$s" "$action" "$name")"
+    ret=$?
+
+    if grep -q "Job is already running" "$_tmp"; then
+      success '{ "status": "active" }'
+    elif (( $ret != 0 )); then
+      fail
+    else
+      success "{ \"status\": \"${cmd_out#* }\" }"
+    fi
+esac
