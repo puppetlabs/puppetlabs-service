@@ -8,7 +8,8 @@
 fail() {
   # Print a message: entry if there were anything printed to stderr
   if [[ -s $_tmp ]]; then
-    echo "{ \"status\": \"error\", \"message\": \"$(<$_tmp)\" }"
+    # Hack to try and output valid json by replacing newlines with spaces. See jq TODO.
+    echo "{ \"status\": \"error\", \"message\": \"$(tr '\n' ' ' <$_tmp)\" }"
   else
     echo '{ "status": "error" }'
   fi
@@ -48,7 +49,10 @@ case "$available_manager" in
     if [[ $action != "status" ]]; then
       "$s" "$action" "$name" || fail
     fi
-    cmd_out="$("$s" "is-active" "$name")" || fail
+
+    # In any systemd case, don't consider a non-zero return code of "is-active" to be an error
+    # A user may be asking about a dead process, in which case we successfully return "inactive"
+    cmd_out="$("$s" "is-active" "$name")"
     success "{ \"status\": \"$cmd_out\" }"
     ;;
 
