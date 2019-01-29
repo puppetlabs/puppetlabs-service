@@ -2,6 +2,7 @@
 require 'spec_helper_acceptance'
 require 'beaker-task_helper/inventory'
 require 'bolt_spec/run'
+require 'pry'
 
 describe 'linux service task', unless: fact('osfamily') == 'windows' do
   include Beaker::TaskHelper::Inventory
@@ -34,6 +35,7 @@ describe 'linux service task', unless: fact('osfamily') == 'windows' do
   describe 'stop action' do
     it "stop #{package_to_use}" do
       result = run('action' => 'stop', 'name' => package_to_use)
+      binding.pry
       expect(result[0]['status']).to eq('success')
       expect(result[0]['result']['status']).to match(%r{inactive})
     end

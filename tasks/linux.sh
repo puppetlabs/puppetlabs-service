@@ -44,7 +44,7 @@ done
 
 case "$available_manager" in
   # systemd commands don't output anything on success, so follow up with a status command
-  # use the is-active subcommand for concise information
+  # use --property ActiveState for concise information
   "systemctl")
     if [[ $action != "status" ]]; then
       "$s" "$action" "$name" || fail
@@ -52,8 +52,8 @@ case "$available_manager" in
 
     # In any systemd case, don't consider a non-zero return code of "is-active" to be an error
     # A user may be asking about a dead process, in which case we successfully return "inactive"
-    cmd_out="$("$s" "is-active" "$name")"
-    success "{ \"status\": \"$cmd_out\" }"
+    cmd_out="$("$s" "show" "$name" "--property" "ActiveState")"
+    success "{ \"status\": \"${cmd_out#ActiveState=*}\" }"
     ;;
 
   # service and initd may return non-zero if the service is already started
