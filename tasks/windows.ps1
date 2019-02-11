@@ -23,16 +23,16 @@ function Invoke-ServiceAction($Service, $Action)
     'start'
     {
       if ($Service.Status -eq 'Running') { $status = $InSyncStatus }
-      else { Start-Service $Service }
+      else { $Service | Start-Service }
     }
     'stop'
     {
       if ($Service.Status -eq 'Stopped') { $status = $InSyncStatus }
-      else { Stop-Service $Service }
+      else { $Service | Stop-Service }
     }
     'restart'
     {
-      Restart-Service $Service
+      $Service | Restart-Service
       $status = 'restarted'
     }
     # no-op since status always returned
