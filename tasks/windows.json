@@ -4,8 +4,8 @@
   "input_method": "powershell",
   "parameters": {
     "action": {
-      "description": "The operation (start, stop, restart, status) to perform on the service",
-      "type": "Enum[start, stop, restart, status]"
+      "description": "The operation (start, stop, restart, enable, disable, status) to perform on the service",
+      "type": "Enum[start, stop, restart, enable, disable, status]"
     },
     "name": {
       "description": "The short name of the Windows service to operate on.",

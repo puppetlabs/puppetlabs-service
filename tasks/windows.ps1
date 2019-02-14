@@ -35,6 +35,16 @@ function Invoke-ServiceAction($Service, $Action)
       $Service | Restart-Service
       $status = 'restarted'
     }
+    'enable'
+    {
+      $Service | Set-Service -StartupType Automatic
+      $status = 'enabled'
+    }
+    'disable'
+    {
+      $Service | Set-Service -StartupType Disabled
+      $status = 'disabled'
+    }
     # no-op since status always returned
     'status' { }
   }
