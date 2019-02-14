@@ -6,7 +6,7 @@ param(
   $Name,
 
   [Parameter(Mandatory = $true)]
-  [ValidateSet('start', 'stop', 'restart', 'status')]
+  [ValidateSet('start', 'stop', 'restart', 'enable', 'disable', 'status')]
   [String]
   $Action
 )
