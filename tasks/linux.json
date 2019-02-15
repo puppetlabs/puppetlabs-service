@@ -1,11 +1,11 @@
 {
-  "description": "Manage the state of services (without a puppet agent)",
+  "description": "Manage and inspect the state of services (without a puppet agent)",
   "private": true,
   "input_method": "environment",
   "parameters": {
     "action": {
-      "description": "The operation (start, stop) to perform on the service",
-      "type": "Enum[start, stop, restart]"
+      "description": "The operation (start, stop, restart, enable, disable, status) to perform on the service.",
+      "type": "Enum[start, stop, restart, enable, disable, status]"
     },
     "name": {
       "description": "The name of the service to operate on.",
