@@ -1,4 +1,7 @@
 ---
+.gitlab-ci.yml:
+  unmanaged: true
+
 .travis.yml:
   docker_sets:
     - set: docker/centos-7
@@ -38,9 +41,6 @@ Gemfile:
         version: '~> 1.3'
         condition: ENV['GEM_BOLT']
 
-.gitlab-ci.yml:
-  unmanaged: true
-
 Rakefile:
   extras: |
     # The beaker task requires the test fixtures created by the spec_prep task
@@ -51,3 +51,7 @@ Rakefile:
       spec_prep =  Rake::Task['spec_prep']
       beaker_task.enhance(beaker_task.prerequisite_tasks << spec_prep)
     end
+
+spec/spec_helper.rb:
+  mock_with: ':rspec'
+  coverage_report: true
