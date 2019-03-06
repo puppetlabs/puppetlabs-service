@@ -13,6 +13,14 @@ install_ca_certs
 install_module_on(hosts)
 install_module_dependencies_on(hosts)
 
+# Bolt helper task
+def task_run(executor, params)
+  module_path = RSpec.configuration.module_path
+  config = { 'modulepath' => module_path }
+  inventory = hosts_to_inventory.merge('features' => ['puppet-agent'])
+  run_task(executor, 'default', params, config: config, inventory: inventory)
+end
+
 RSpec.configure do |c|
   # Readable test descriptions
   c.formatter = :documentation
