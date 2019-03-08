@@ -5,12 +5,10 @@ describe 'service task' do
   include Beaker::TaskHelper::Inventory
   include BoltSpec::Run
 
-  osfamily_fact = os[:family]
-
   package_to_use = ''
   before(:all) do
-    if osfamily_fact != 'windows'
-      if osfamily_fact == 'redhat' && os[:release].to_i < 6
+    if os[:family] != 'windows'
+      if os[:family] == 'redhat' && os[:release].to_i < 6
         task_run('service', 'action' => 'stop', 'name' => 'syslog')
       end
       package_to_use = 'rsyslog'
@@ -53,7 +51,7 @@ describe 'service task' do
       expect(result[0]['result']['status']).to match(%r{in_sync|stopped})
 
       # Debian can give incorrect status
-      unless ['debian', 'ubuntu'].include?(osfamily_fact)
+      unless ['debian', 'ubuntu'].include?(os[:family])
         result = task_run('service', 'action' => 'status', 'name' => package_to_use)
         expect(result[0]['status']).to eq('success')
         expect(result[0]['result']['status']).to eq('stopped')
@@ -69,7 +67,7 @@ describe 'service task' do
       expect(result[0]['result']['status']).to match(%r{in_sync|started})
 
       # Debian can give incorrect status
-      if osfamily_fact != 'debian'
+      if os[:family] != 'debian'
         result = task_run('service', 'action' => 'status', 'name' => package_to_use)
         expect(result[0]['status']).to eq('success')
         expect(result[0]['result']['status']).to eq('running')

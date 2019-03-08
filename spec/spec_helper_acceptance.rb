@@ -14,11 +14,11 @@ install_module_on(hosts)
 install_module_dependencies_on(hosts)
 
 # Bolt helper task
-def task_run(executor, params)
+def task_run(task_name, params)
   module_path = RSpec.configuration.module_path
   config = { 'modulepath' => module_path }
   inventory = hosts_to_inventory.merge('features' => ['puppet-agent'])
-  run_task(executor, 'default', params, config: config, inventory: inventory)
+  run_task(task_name, 'default', params, config: config, inventory: inventory)
 end
 
 RSpec.configure do |c|

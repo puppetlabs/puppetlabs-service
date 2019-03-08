@@ -18,7 +18,7 @@ This module provides services tasks, There are two kinds of tasks. The default t
 ## Requirements
 This module is compatible with Puppet Enterprise and Puppet Bolt.
 
-* To run tasks with Puppet Enterprise, PE 2017.3 or later must be installed on the machine from which you are running task commands. Machines receiving task requests must be Puppet agents.
+* To run tasks with Puppet Enterprise, PE 2018.1 or later must be installed on the machine from which you are running task commands. Machines receiving task requests must be Puppet agents.
 
 * To run tasks with Puppet Bolt, Bolt 1.0 or later must be installed on the machine from which you are running task commands. Machines receiving task requests must have SSH or WinRM services enabled.
 
