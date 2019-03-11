@@ -22,40 +22,40 @@ describe 'service task' do
   describe 'enable action' do
     it 'enable/status a service' do
       result = task_run('service', 'action' => 'enable', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{in_sync|enabled})
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => %r{in_sync|enabled})
 
       result = task_run('service', 'action' => 'status', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['enabled']).to eq('true')
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('enabled' => 'true')
     end
   end
 
   describe 'restart action' do
     it 'restart/status a service' do
       result = task_run('service', 'action' => 'restart', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to eq('restarted')
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => 'restarted')
 
       result = task_run('service', 'action' => 'status', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to eq('running')
-      expect(result[0]['result']['enabled']).to eq('true')
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => 'running')
+      expect(result[0]['result']).to include('enabled' => 'true')
     end
   end
 
   describe 'stop action' do
     it 'stop/status a service' do
       result = task_run('service', 'action' => 'stop', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{in_sync|stopped})
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => %r{in_sync|stopped})
 
       # Debian can give incorrect status
       unless ['debian', 'ubuntu'].include?(os[:family])
         result = task_run('service', 'action' => 'status', 'name' => package_to_use)
-        expect(result[0]['status']).to eq('success')
-        expect(result[0]['result']['status']).to eq('stopped')
-        expect(result[0]['result']['enabled']).to eq('true')
+        expect(result[0]).to include('status' => 'success')
+        expect(result[0]['result']).to include('status' => 'stopped')
+        expect(result[0]['result']).to include('enabled' => 'true')
       end
     end
   end
@@ -63,15 +63,15 @@ describe 'service task' do
   describe 'start action' do
     it 'start/status a service' do
       result = task_run('service', 'action' => 'start', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{in_sync|started})
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => %r{in_sync|started})
 
       # Debian can give incorrect status
       if os[:family] != 'debian'
         result = task_run('service', 'action' => 'status', 'name' => package_to_use)
-        expect(result[0]['status']).to eq('success')
-        expect(result[0]['result']['status']).to eq('running')
-        expect(result[0]['result']['enabled']).to eq('true')
+        expect(result[0]).to include('status' => 'success')
+        expect(result[0]['result']).to include('status' => 'running')
+        expect(result[0]['result']).to include('enabled' => 'true')
       end
     end
   end
@@ -79,12 +79,12 @@ describe 'service task' do
   describe 'disable action' do
     it 'disable/status a service' do
       result = task_run('service', 'action' => 'disable', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to eq('disabled')
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => 'disabled')
 
       result = task_run('service', 'action' => 'status', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['enabled']).to eq('false')
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('enabled' => 'false')
     end
   end
 end
