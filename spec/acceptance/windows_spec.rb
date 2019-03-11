@@ -19,7 +19,7 @@ describe 'windows service task', if: fact('osfamily') == 'windows' do
     it "stop #{package_to_use}" do
       result = run('action' => 'stop', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('status' => %r{Stopped})
+      expect(result[0]['result']).to include('status' => 'Stopped')
     end
   end
 
@@ -27,7 +27,7 @@ describe 'windows service task', if: fact('osfamily') == 'windows' do
     it "start #{package_to_use}" do
       result = run('action' => 'start', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('status' => %r{started})
+      expect(result[0]['result']).to include('status' => 'Started')
     end
   end
 
@@ -35,7 +35,7 @@ describe 'windows service task', if: fact('osfamily') == 'windows' do
     it "restart #{package_to_use}" do
       result = run('action' => 'restart', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('status' => %r{restarted})
+      expect(result[0]['result']).to include('status' => 'Restarted')
     end
   end
 
@@ -43,8 +43,8 @@ describe 'windows service task', if: fact('osfamily') == 'windows' do
     it "status #{package_to_use}" do
       result = run('action' => 'status', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('status' => %r{started})
-      expect(result[0]['result']).to include('enabled' => 'Automatic')
+      expect(result[0]['result']).to include('status' => 'Started')
+      expect(result[0]['result']).to include('enabled')
     end
   end
 end

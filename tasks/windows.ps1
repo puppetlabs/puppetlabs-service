@@ -23,17 +23,17 @@ function Invoke-ServiceAction($Service, $Action)
     'start'
     {
       if ($Service.Status -eq 'Running') { $status = $InSyncStatus }
-      else { Start-Service $Service }
+      else { Start-Service -inputObject $Service }
     }
     'stop'
     {
       if ($Service.Status -eq 'Stopped') { $status = $InSyncStatus }
-      else { Stop-Service $Service }
+      else { Stop-Service -inputObject $Service }
     }
     'restart'
     {
-      Restart-Service $Service
-      $status = 'restarted'
+      Restart-Service -inputObject $Service
+      $status = 'Restarted'
     }
     # no-op since status always returned
     'status' { }
@@ -42,10 +42,12 @@ function Invoke-ServiceAction($Service, $Action)
   # user action
   if ($status -eq $null)
   {
+    # For older systems this needs to be refreshed. Is there a cleaner way?
+    $refresh = Get-Service -Name $service.ServiceName
+    $status = $refresh.Status
     # https://msdn.microsoft.com/en-us/library/system.serviceprocess.servicecontrollerstatus(v=vs.110).aspx
     # ContinuePending, Paused, PausePending, Running, StartPending, Stopped, StopPending
-    $status = $Service.Status
-    if ($status -eq 'Running') { $status = 'started' }
+    if ($status -eq 'Running') { $status = 'Started' }
   }
 
   return $status
