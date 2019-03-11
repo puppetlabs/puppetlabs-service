@@ -16,24 +16,33 @@ describe 'linux service task', unless: os[:family] == 'windows' do
   describe 'stop action' do
     it "stop #{package_to_use}" do
       result = task_run('service::linux', 'action' => 'stop', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{ActiveState=inactive|stop})
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => %r{ActiveState=inactive|stop})
     end
   end
 
   describe 'start action' do
     it "start #{package_to_use}" do
       result = task_run('service::linux', 'action' => 'start', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{ActiveState=active|running})
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => %r{ActiveState=active|running})
     end
   end
 
   describe 'restart action' do
     it "restart #{package_to_use}" do
       result = task_run('service::linux', 'action' => 'restart', 'name' => package_to_use)
-      expect(result[0]['status']).to eq('success')
-      expect(result[0]['result']['status']).to match(%r{ActiveState=active|running})
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => %r{ActiveState=active|running})
+    end
+  end
+
+  describe 'status action' do
+    it "status #{package_to_use}" do
+      result = task_run('service::linux', 'action' => 'status', 'name' => package_to_use)
+      expect(result[0]).to include('status' => 'success')
+      expect(result[0]['result']).to include('status' => %r{ActiveState=active|running})
+      expect(result[0]['result']).to include('enabled')
     end
   end
 end

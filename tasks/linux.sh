@@ -51,7 +51,13 @@ case "$available_manager" in
     # `systemctl show` is the command to use in scripts.  Use it to get the pid, load, and active states
     # sample output: "MainPID=23377,LoadState=loaded,ActiveState=active"
     cmd_out="$("$s" "show" "$name" -p LoadState -p MainPID -p ActiveState --no-pager | paste -sd ',' -)"
-    success "{ \"status\": \"${cmd_out}\" }"
+
+    if [[ $action != "status" ]]; then
+      success "{ \"status\": \"${cmd_out}\" }"
+    else
+      enabled_out="$("$s" "is-enabled" "$name")"
+      success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
+    fi
     ;;
 
   # These commands seem to only differ slightly in their invocation
@@ -59,9 +65,13 @@ case "$available_manager" in
     if [[ $s == "service" ]]; then
       cmd=("$s" "$name" "$action")
       cmd_status=("$s" "$name" "status")
+      # The chkconfig output has 'interesting' spacing/tabs, use word splitting to have single spaces
+      word_split=($(chkconfig --list "$name"))
+      enabled_out="${word_split[@]}"
     else
       cmd=("$s" "$action" "$name")
       cmd_status=("$s" "status" "$name")
+      enabled_out="$("$s" "show-config" "$name")"
     fi
 
     if [[ $action != "status" ]]; then
@@ -70,10 +80,12 @@ case "$available_manager" in
       "${cmd[@]}" >/dev/null || {
         grep -q "Job is already running" "$_tmp" || grep -q "Unknown instance:" "$_tmp" || fail
       }
-
+      
+      cmd_out="$("${cmd_status[@]}")"
+      success "{ \"status\": \"${cmd_out}\" }"
     fi
 
     # "status" is already pretty terse for these commands
     cmd_out="$("${cmd_status[@]}")"
-    success "{ \"status\": \"${cmd_out}\" }"
+    success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
 esac
