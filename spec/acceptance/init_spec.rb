@@ -12,7 +12,10 @@ describe 'service task' do
         task_run('service', 'action' => 'stop', 'name' => 'syslog')
       end
       package_to_use = 'rsyslog'
-     BoltSpec::Run.instance_methods(apply_manifest("package { \"#{package_to_use}\": ensure => present, }", 'default', execute:true, config: { 'modulepath' => RSpec.configuration.module_path }, inventory: hosts_to_inventory.merge('features' => ['puppet-agent'])))
+      BoltSpec::Run.instance_methods(apply_manifest("package { \"#{package_to_use}\": ensure => present, }", 'default',
+                                                    execute: true,
+                                                    config: { 'modulepath' => RSpec.configuration.module_path },
+                                                    inventory: hosts_to_inventory.merge('features' => ['puppet-agent'])))
     else
       package_to_use = 'W32Time'
       task_run('service', 'action' => 'start', 'name' => package_to_use)
