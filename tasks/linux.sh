@@ -7,11 +7,11 @@ fail() {
   # Print a message: entry if there were anything printed to stderr
   if [[ -s $_tmp ]]; then
     # Hack to try and output valid json by replacing newlines with spaces.
-    echo "{ \"status\": \"error\", \"message\": \"$(tr '\n' ' ' <$_tmp)\" }"
+    error_data="{ \"message\": \"$(tr '\n' ' ' <$_tmp)\", \"kind\": \"bash-error\", \"details\": {} }"
   else
-    echo '{ "status": "error" }'
+    error_data="{ \"message\": \"Task error\", \"kind\": \"bash-error\", \"details\": {} }"
   fi
-
+  echo "{ \"status\": \"failure\", \"_error\": $error_data }"
   exit ${2:-1}
 }
 

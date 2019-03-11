@@ -78,8 +78,6 @@ catch
   Write-Host @"
   {
     "status"  : "failure",
-    "name"    : "$Name",
-    "action"  : "$Action",
     "_error"  : {
       "msg" : "Unable to perform '$Action' on '$Name': $($_.Exception.Message)",
       "kind": "powershell_error",
