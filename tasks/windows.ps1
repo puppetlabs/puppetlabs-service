@@ -56,17 +56,22 @@ try
   $service = Get-Service -Name $Name
   $status = Invoke-ServiceAction -Service $service -Action $action
 
-# TODO: could use ConvertTo-Json, but that requires PS3
-# if embedding in literal, should make sure Name / Status doesn't need escaping
-Write-Host @"
+  # TODO: could use ConvertTo-Json, but that requires PS3
+  # if embedding in literal, should make sure Name / Status doesn't need escaping
+  if ($action -eq 'status') {
+    Write-Host @"
 {
-  "name"        : "$($service.Name)",
-  "action"      : "$Action",
-  "displayName" : "$($service.DisplayName)",
   "status"      : "$status",
-  "startType"   : "$($service.StartType)"
+  "enabled"   : "$($service.StartType)"
 }
 "@
+  } else {
+    Write-Host @"
+{
+  "status"      : "$status"
+}
+"@
+  }
 }
 catch
 {
