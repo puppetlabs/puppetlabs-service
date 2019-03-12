@@ -2,9 +2,6 @@
 require 'spec_helper_acceptance'
 
 describe 'service task' do
-  include Beaker::TaskHelper::Inventory
-  include BoltSpec::Run
-
   package_to_use = ''
   before(:all) do
     if os[:family] != 'windows'

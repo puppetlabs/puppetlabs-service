@@ -2,9 +2,6 @@
 require 'spec_helper_acceptance'
 
 describe 'linux service task', unless: os[:family] == 'windows' do
-  include Beaker::TaskHelper::Inventory
-  include BoltSpec::Run
-
   package_to_use = 'rsyslog'
   before(:all) do
     if os[:family] == 'redhat' && os[:release].to_i < 6
