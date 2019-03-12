@@ -10,10 +10,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     if os[:family] == 'redhat' && os[:release].to_i < 6
       task_run('service::linux', 'action' => 'stop', 'name' => 'syslog')
     end
-    BoltSpec::Run.instance_methods(apply_manifest("package { \"#{package_to_use}\": ensure => present, }", 'default',
-                                                  execute: true,
-                                                  config: { 'modulepath' => RSpec.configuration.module_path },
-                                                  inventory: hosts_to_inventory.merge('features' => ['puppet-agent'])))
+    apply_manifest_on(default, "package { \"#{package_to_use}\": ensure => present, }")
   end
 
   describe 'stop action' do
