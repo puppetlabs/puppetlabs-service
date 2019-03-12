@@ -6,10 +6,33 @@ param(
   $Name,
 
   [Parameter(Mandatory = $true)]
-  [ValidateSet('start', 'stop', 'restart', 'status')]
   [String]
   $Action
 )
+
+function ErrorMessage($Action, $Name, $Message)
+{
+  Write-Host @"
+{
+  "status"  : "failure",
+  "_error"  : {
+    "msg" : "Unable to perform '$Action' on '$Name': $Message",
+    "kind": "powershell_error",
+    "details" : {}
+  }
+}
+"@  
+}
+
+# Do this outside the initial script parameters in order to control the error message
+function ValidateParams
+{
+  param(
+    [ValidateSet('start', 'stop', 'restart', 'status')]
+    [String]
+    $Action
+  )
+}
 
 $ErrorActionPreference = 'Stop'
 
@@ -55,6 +78,7 @@ function Invoke-ServiceAction($Service, $Action)
 
 try
 {
+  ValidateParams -Action $action
   $service = Get-Service -Name $Name
   $status = Invoke-ServiceAction -Service $service -Action $action
 
@@ -75,16 +99,12 @@ try
 "@
   }
 }
+# parameter validation with controlled output
+catch [System.Management.Automation.ParameterBindingException]
+{
+  ErrorMessage -Action $Action -Name $Name -Message "'$Action' action not supported for windows.ps1"
+}
 catch
 {
-  Write-Host @"
-  {
-    "status"  : "failure",
-    "_error"  : {
-      "msg" : "Unable to perform '$Action' on '$Name': $($_.Exception.Message)",
-      "kind": "powershell_error",
-      "details" : {}
-    }
-  }
-"@
+  ErrorMessage -Action $Action -Name $Name -Message "$($_.Exception.Message)"
 }

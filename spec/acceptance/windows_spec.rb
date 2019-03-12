@@ -35,4 +35,29 @@ describe 'windows service task', if: os[:family] == 'windows' do
       expect(result[0]['result']).to include('enabled')
     end
   end
+
+  context 'when puppet-agent feature not available on target' do
+    let(:config) { { 'modulepath' => RSpec.configuration.module_path } }
+    let(:inventory) { hosts_to_inventory }
+
+    it 'enable action fails' do
+      params = { 'action' => 'enable', 'name' => package_to_use }
+      result = run_task('service', 'default', params, config: config, inventory: inventory)
+      expect(result[0]).to include('status' => 'failure')
+      expect(result[0]['result']).to include('status' => 'failure')
+      expect(result[0]['result']['_error']).to include('msg' => %r{'enable' action not supported})
+      expect(result[0]['result']['_error']).to include('kind' => 'powershell_error')
+      expect(result[0]['result']['_error']).to include('details')
+    end
+
+    it 'disable action fails' do
+      params = { 'action' => 'disable', 'name' => package_to_use }
+      result = run_task('service', 'default', params, config: config, inventory: inventory)
+      expect(result[0]).to include('status' => 'failure')
+      expect(result[0]['result']).to include('status' => 'failure')
+      expect(result[0]['result']['_error']).to include('msg' => %r{'disable' action not supported})
+      expect(result[0]['result']['_error']).to include('kind' => 'powershell_error')
+      expect(result[0]['result']['_error']).to include('details')
+    end
+  end
 end

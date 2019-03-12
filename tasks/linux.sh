@@ -7,9 +7,9 @@ fail() {
   # Print a message: entry if there were anything printed to stderr
   if [[ -s $_tmp ]]; then
     # Hack to try and output valid json by replacing newlines with spaces.
-    error_data="{ \"message\": \"$(tr '\n' ' ' <$_tmp)\", \"kind\": \"bash-error\", \"details\": {} }"
+    error_data="{ \"msg\": \"$(tr '\n' ' ' <$_tmp)\", \"kind\": \"bash-error\", \"details\": {} }"
   else
-    error_data="{ \"message\": \"Task error\", \"kind\": \"bash-error\", \"details\": {} }"
+    error_data="{ \"msg\": \"Task error\", \"kind\": \"bash-error\", \"details\": {} }"
   fi
   echo "{ \"status\": \"failure\", \"_error\": $error_data }"
   exit ${2:-1}
@@ -20,12 +20,20 @@ success() {
   exit 0
 }
 
+validation_error() {
+  error_data="{ \"msg\": \""$1"\", \"kind\": \"bash-error\", \"details\": {} }"
+  echo "{ \"status\": \"failure\", \"_error\": $error_data }"
+  exit 255
+}
+
 # Keep stderr in a temp file.  Easier than `tee` or capturing process substitutions
 _tmp="$(mktemp)"
 exec 2>"$_tmp"
 
 action="$PT_action"
 name="$PT_name"
+
+# Verify service manager is available
 service_managers=("systemctl" "service" "initctl")
 
 for s in "${service_managers[@]}"; do
@@ -36,9 +44,14 @@ for s in "${service_managers[@]}"; do
 done
 
 [[ $available_manager ]] || {
-  echo '{ "status": "No service managers found" }'
-  exit 255
+  validation_error "No service managers found"
 }
+
+# Verify only allowable actions are specified
+case "$action" in 
+  "start"|"stop"|"restart"|"status");;
+  *) validation_error "'${action}' action not supported for linux.sh"
+esac
 
 # For any service manager, check if the action is "status". If so, only run a status command
 # Otherwise, run the requested action and follow up with a "status" command
