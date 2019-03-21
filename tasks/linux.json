@@ -11,12 +11,5 @@
       "description": "The name of the service to operate on.",
       "type": "String[1]"
     }
-  },
-  "extensions": {
-    "discovery": {
-      "friendlyName": "Manage service on Linux",
-      "osFamily": "linux",
-      "type": ["host"]
-    }
   }
 }
