@@ -11,12 +11,5 @@
       "description": "The short name of the Windows service to operate on.",
       "type": "String[1]"
     }
-  },
-  "extensions": {
-    "discovery": {
-      "friendlyName": "Manage service on Windows",
-      "osFamily": "windows",
-      "type": ["host"]
-    }
   }
 }
