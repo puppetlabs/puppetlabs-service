@@ -2,10 +2,20 @@
 require 'spec_helper_acceptance'
 
 describe 'windows service task', if: os[:family] == 'windows' do
+  include Beaker::TaskHelper::Inventory
+  include BoltSpec::Run
+
+  def bolt_config
+    { 'modulepath' => RSpec.configuration.module_path }
+  end
+
+  let(:bolt_inventory) { hosts_to_inventory.merge('features' => ['puppet-agent']) }
+
   package_to_use = 'Spooler'
+
   describe 'stop action' do
     it "stop #{package_to_use}" do
-      result = task_run('service::windows', 'action' => 'stop', 'name' => package_to_use)
+      result = run_task('service::windows', 'default', 'action' => 'stop', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
       expect(result[0]['result']).to include('status' => 'Stopped')
     end
@@ -13,7 +23,7 @@ describe 'windows service task', if: os[:family] == 'windows' do
 
   describe 'start action' do
     it "start #{package_to_use}" do
-      result = task_run('service::windows', 'action' => 'start', 'name' => package_to_use)
+      result = run_task('service::windows', 'default', 'action' => 'start', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
       expect(result[0]['result']).to include('status' => 'Started')
     end
@@ -21,7 +31,7 @@ describe 'windows service task', if: os[:family] == 'windows' do
 
   describe 'restart action' do
     it "restart #{package_to_use}" do
-      result = task_run('service::windows', 'action' => 'restart', 'name' => package_to_use)
+      result = run_task('service::windows', 'default', 'action' => 'restart', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
       expect(result[0]['result']).to include('status' => 'Restarted')
     end
@@ -29,7 +39,7 @@ describe 'windows service task', if: os[:family] == 'windows' do
 
   describe 'status action' do
     it "status #{package_to_use}" do
-      result = task_run('service::windows', 'action' => 'status', 'name' => package_to_use)
+      result = run_task('service::windows', 'default', 'action' => 'status', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
       expect(result[0]['result']).to include('status' => 'Started')
       expect(result[0]['result']).to include('enabled')
@@ -37,12 +47,11 @@ describe 'windows service task', if: os[:family] == 'windows' do
   end
 
   context 'when puppet-agent feature not available on target' do
-    let(:config) { { 'modulepath' => RSpec.configuration.module_path } }
-    let(:inventory) { hosts_to_inventory }
+    let(:bolt_inventory) { hosts_to_inventory }
 
     it 'enable action fails' do
       params = { 'action' => 'enable', 'name' => package_to_use }
-      result = run_task('service', 'default', params, config: config, inventory: inventory)
+      result = run_task('service', 'default', params)
       expect(result[0]).to include('status' => 'failure')
       expect(result[0]['result']).to include('status' => 'failure')
       expect(result[0]['result']['_error']).to include('msg' => %r{'enable' action not supported})
@@ -52,7 +61,7 @@ describe 'windows service task', if: os[:family] == 'windows' do
 
     it 'disable action fails' do
       params = { 'action' => 'disable', 'name' => package_to_use }
-      result = run_task('service', 'default', params, config: config, inventory: inventory)
+      result = run_task('service', 'default', params)
       expect(result[0]).to include('status' => 'failure')
       expect(result[0]['result']).to include('status' => 'failure')
       expect(result[0]['result']['_error']).to include('msg' => %r{'disable' action not supported})
