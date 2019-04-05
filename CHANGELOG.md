@@ -2,18 +2,32 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [0.5.0](https://github.com/puppetlabs/puppetlabs-service/tree/0.5.0) (2019-01-08)
+## [v0.6.0](https://github.com/puppetlabs/puppetlabs-service/tree/v0.6.0) (2019-04-08)
 
-[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.4.0...0.5.0)
-
-### Fixed
-
-- pdksync - \(FM-7655\) Fix rubygems-update for ruby \< 2.3 [\#62](https://github.com/puppetlabs/puppetlabs-service/pull/62) ([tphoney](https://github.com/tphoney))
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.5.0...v0.6.0)
 
 ### Added
 
-- \(MODULES-8420\) Move to GEM\_BOLT pattern [\#65](https://github.com/puppetlabs/puppetlabs-service/pull/65) ([donoghuc](https://github.com/donoghuc))
+- \(SEN-796\) Move extension metadata [\#86](https://github.com/puppetlabs/puppetlabs-service/pull/86) ([conormurraypuppet](https://github.com/conormurraypuppet))
+- \(SEN-796\) Add discovery extension metadata [\#85](https://github.com/puppetlabs/puppetlabs-service/pull/85) ([conormurraypuppet](https://github.com/conormurraypuppet))
+- \(BOLT-1103\) Unify output of task implementations [\#83](https://github.com/puppetlabs/puppetlabs-service/pull/83) ([donoghuc](https://github.com/donoghuc))
+
+### Fixed
+
+- \(MODULES-8717\) Fix dependency issue with BoltSpec [\#80](https://github.com/puppetlabs/puppetlabs-service/pull/80) ([eimlav](https://github.com/eimlav))
+
+## [0.5.0](https://github.com/puppetlabs/puppetlabs-service/tree/0.5.0) (2019-01-09)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.4.0...0.5.0)
+
+### Added
+
 - \(MODULES-8391\) Enable implementations on the init task and hide others [\#61](https://github.com/puppetlabs/puppetlabs-service/pull/61) ([MikaelSmith](https://github.com/MikaelSmith))
+
+### Fixed
+
+- \(MODULES-8420\) Move to GEM\_BOLT pattern [\#65](https://github.com/puppetlabs/puppetlabs-service/pull/65) ([donoghuc](https://github.com/donoghuc))
+- pdksync - \(FM-7655\) Fix rubygems-update for ruby \< 2.3 [\#62](https://github.com/puppetlabs/puppetlabs-service/pull/62) ([tphoney](https://github.com/tphoney))
 
 ## [0.4.0](https://github.com/puppetlabs/puppetlabs-service/tree/0.4.0) (2018-09-28)
 
