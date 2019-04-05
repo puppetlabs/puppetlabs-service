@@ -36,9 +36,9 @@ name="$PT_name"
 # Verify service manager is available
 service_managers=("systemctl" "service" "initctl")
 
-for s in "${service_managers[@]}"; do
-  if type "$s" &>/dev/null; then
-    available_manager="$s"
+for service in "${service_managers[@]}"; do
+  if type "$service" &>/dev/null; then
+    available_manager="$service"
     break
   fi
 done
@@ -48,7 +48,7 @@ done
 }
 
 # Verify only allowable actions are specified
-case "$action" in 
+case "$action" in
   "start"|"stop"|"restart"|"status");;
   *) validation_error "'${action}' action not supported for linux.sh"
 esac
@@ -58,33 +58,33 @@ esac
 case "$available_manager" in
   "systemctl")
     if [[ $action != "status" ]]; then
-      "$s" "$action" "$name" || fail
+      "$service" "$action" "$name" || fail
     fi
 
     # `systemctl show` is the command to use in scripts.  Use it to get the pid, load, and active states
     # sample output: "MainPID=23377,LoadState=loaded,ActiveState=active"
-    cmd_out="$("$s" "show" "$name" -p LoadState -p MainPID -p ActiveState --no-pager | paste -sd ',' -)"
+    cmd_out="$("$service" "show" "$name" -p LoadState -p MainPID -p ActiveState --no-pager | paste -sd ',' -)"
 
     if [[ $action != "status" ]]; then
       success "{ \"status\": \"${cmd_out}\" }"
     else
-      enabled_out="$("$s" "is-enabled" "$name")"
+      enabled_out="$("$service" "is-enabled" "$name")"
       success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
     fi
     ;;
 
   # These commands seem to only differ slightly in their invocation
   "service"|"initctl")
-    if [[ $s == "service" ]]; then
-      cmd=("$s" "$name" "$action")
-      cmd_status=("$s" "$name" "status")
+    if [[ $service == "service" ]]; then
+      cmd=("$service" "$name" "$action")
+      cmd_status=("$service" "$name" "status")
       # The chkconfig output has 'interesting' spacing/tabs, use word splitting to have single spaces
       word_split=($(chkconfig --list "$name"))
       enabled_out="${word_split[@]}"
     else
-      cmd=("$s" "$action" "$name")
-      cmd_status=("$s" "status" "$name")
-      enabled_out="$("$s" "show-config" "$name")"
+      cmd=("$service" "$action" "$name")
+      cmd_status=("$service" "status" "$name")
+      enabled_out="$("$service" "show-config" "$name")"
     fi
 
     if [[ $action != "status" ]]; then
@@ -93,7 +93,7 @@ case "$available_manager" in
       "${cmd[@]}" >/dev/null || {
         grep -q "Job is already running" "$_tmp" || grep -q "Unknown instance:" "$_tmp" || fail
       }
-      
+
       cmd_out="$("${cmd_status[@]}")"
       success "{ \"status\": \"${cmd_out}\" }"
     fi
