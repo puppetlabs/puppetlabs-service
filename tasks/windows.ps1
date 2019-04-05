@@ -6,10 +6,33 @@ param(
   $Name,
 
   [Parameter(Mandatory = $true)]
-  [ValidateSet('start', 'stop', 'restart', 'status')]
   [String]
   $Action
 )
+
+function ErrorMessage($Action, $Name, $Message)
+{
+  Write-Host @"
+{
+  "status"  : "failure",
+  "_error"  : {
+    "msg" : "Unable to perform '$Action' on '$Name': $Message",
+    "kind": "powershell_error",
+    "details" : {}
+  }
+}
+"@  
+}
+
+# Do this outside the initial script parameters in order to control the error message
+function ValidateParams
+{
+  param(
+    [ValidateSet('start', 'stop', 'restart', 'status')]
+    [String]
+    $Action
+  )
+}
 
 $ErrorActionPreference = 'Stop'
 
@@ -23,17 +46,17 @@ function Invoke-ServiceAction($Service, $Action)
     'start'
     {
       if ($Service.Status -eq 'Running') { $status = $InSyncStatus }
-      else { Start-Service $Service }
+      else { Start-Service -inputObject $Service }
     }
     'stop'
     {
       if ($Service.Status -eq 'Stopped') { $status = $InSyncStatus }
-      else { Stop-Service $Service }
+      else { Stop-Service -inputObject $Service }
     }
     'restart'
     {
-      Restart-Service $Service
-      $status = 'restarted'
+      Restart-Service -inputObject $Service
+      $status = 'Restarted'
     }
     # no-op since status always returned
     'status' { }
@@ -42,10 +65,12 @@ function Invoke-ServiceAction($Service, $Action)
   # user action
   if ($status -eq $null)
   {
+    # For older systems this needs to be refreshed. Is there a cleaner way?
+    $refresh = Get-Service -Name $service.ServiceName
+    $status = $refresh.Status
     # https://msdn.microsoft.com/en-us/library/system.serviceprocess.servicecontrollerstatus(v=vs.110).aspx
     # ContinuePending, Paused, PausePending, Running, StartPending, Stopped, StopPending
-    $status = $Service.Status
-    if ($status -eq 'Running') { $status = 'started' }
+    if ($status -eq 'Running') { $status = 'Started' }
   }
 
   return $status
@@ -53,33 +78,33 @@ function Invoke-ServiceAction($Service, $Action)
 
 try
 {
+  ValidateParams -Action $action
   $service = Get-Service -Name $Name
   $status = Invoke-ServiceAction -Service $service -Action $action
 
-# TODO: could use ConvertTo-Json, but that requires PS3
-# if embedding in literal, should make sure Name / Status doesn't need escaping
-Write-Host @"
+  # TODO: could use ConvertTo-Json, but that requires PS3
+  # if embedding in literal, should make sure Name / Status doesn't need escaping
+  if ($action -eq 'status') {
+    Write-Host @"
 {
-  "name"        : "$($service.Name)",
-  "action"      : "$Action",
-  "displayName" : "$($service.DisplayName)",
   "status"      : "$status",
-  "startType"   : "$($service.StartType)"
+  "enabled"   : "$($service.StartType)"
 }
 "@
+  } else {
+    Write-Host @"
+{
+  "status"      : "$status"
+}
+"@
+  }
+}
+# parameter validation with controlled output
+catch [System.Management.Automation.ParameterBindingException]
+{
+  ErrorMessage -Action $Action -Name $Name -Message "'$Action' action not supported for windows.ps1"
 }
 catch
 {
-  Write-Host @"
-  {
-    "status"  : "failure",
-    "name"    : "$Name",
-    "action"  : "$Action",
-    "_error"  : {
-      "msg" : "Unable to perform '$Action' on '$Name': $($_.Exception.Message)",
-      "kind": "powershell_error",
-      "details" : {}
-    }
-  }
-"@
+  ErrorMessage -Action $Action -Name $Name -Message "$($_.Exception.Message)"
 }
