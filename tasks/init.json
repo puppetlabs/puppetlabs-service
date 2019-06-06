@@ -10,6 +10,10 @@
       "description": "The name of the service to operate on.",
       "type": "String[1]"
     },
+    "force": {
+      "description": "Force a Windows service to restart even if it has dependent services. This parameter is passed for Windows services only.",
+      "type": "Optional[Boolean]"
+    },
     "provider": {
       "description": "The provider to use to manage or inspect the service, defaults to the system service manager. Only used when the 'puppet-agent' feature is available on the target so we can leverage Puppet.",
       "type": "Optional[String[1]]"
