@@ -7,7 +7,11 @@ param(
 
   [Parameter(Mandatory = $true)]
   [String]
-  $Action
+  $Action,
+
+  [Parameter(Mandatory = $false)]
+  [Switch]
+  $Force
 )
 
 function ErrorMessage($Action, $Name, $Message)
@@ -36,7 +40,7 @@ function ValidateParams
 
 $ErrorActionPreference = 'Stop'
 
-function Invoke-ServiceAction($Service, $Action)
+function Invoke-ServiceAction($Service, $Action, $Force)
 {
   $inSyncStatus = 'in_sync'
   $status = $null
@@ -51,11 +55,11 @@ function Invoke-ServiceAction($Service, $Action)
     'stop'
     {
       if ($Service.Status -eq 'Stopped') { $status = $InSyncStatus }
-      else { Stop-Service -inputObject $Service }
+      else { Stop-Service -inputObject $Service -Force:$Force }
     }
     'restart'
     {
-      Restart-Service -inputObject $Service
+      Restart-Service -inputObject $Service  -Force:$Force
       $status = 'Restarted'
     }
     # no-op since status always returned
@@ -80,7 +84,7 @@ try
 {
   ValidateParams -Action $action
   $service = Get-Service -Name $Name
-  $status = Invoke-ServiceAction -Service $service -Action $action
+  $status = Invoke-ServiceAction -Service $service -Action $action  -Force:$Force
 
   # TODO: could use ConvertTo-Json, but that requires PS3
   # if embedding in literal, should make sure Name / Status doesn't need escaping

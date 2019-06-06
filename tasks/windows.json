@@ -10,6 +10,10 @@
     "name": {
       "description": "The short name of the Windows service to operate on.",
       "type": "String[1]"
+    },
+    "force": {
+      "description": "Force the service to stop or restart, even if other services depend on it",
+      "type": "Optional[Boolean]"
     }
   }
 }
