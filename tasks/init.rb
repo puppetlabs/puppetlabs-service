@@ -27,7 +27,7 @@ def restart(provider)
 end
 
 def status(provider)
-  { status: provider.status, enabled: provider.enabled? }
+  { status: provider.status, enable: provider.enabled? }
 end
 
 def enable(provider)

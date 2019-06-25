@@ -69,7 +69,7 @@ case "$available_manager" in
       success "{ \"status\": \"${cmd_out}\" }"
     else
       enabled_out="$("$service" "is-enabled" "$name")"
-      success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
+      success "{ \"status\": \"${cmd_out}\", \"enable\": \"${enabled_out}\" }"
     fi
     ;;
 
@@ -100,5 +100,5 @@ case "$available_manager" in
 
     # "status" is already pretty terse for these commands
     cmd_out="$("${cmd_status[@]}")"
-    success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
+    success "{ \"status\": \"${cmd_out}\", \"enable\": \"${enabled_out}\" }"
 esac

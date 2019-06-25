@@ -92,7 +92,7 @@ try
     Write-Host @"
 {
   "status"      : "$status",
-  "enabled"   : "$($service.StartType)"
+  "enable"   : "$($service.StartType)"
 }
 "@
   } else {

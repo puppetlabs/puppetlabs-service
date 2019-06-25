@@ -36,7 +36,7 @@ describe 'service task' do
 
       result = run_task('service', 'default', 'action' => 'status', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('enabled' => 'true')
+      expect(result[0]['result']).to include('enable' => 'true')
     end
   end
 
@@ -49,7 +49,7 @@ describe 'service task' do
       result = run_task('service', 'default', 'action' => 'status', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
       expect(result[0]['result']).to include('status' => 'running')
-      expect(result[0]['result']).to include('enabled' => 'true')
+      expect(result[0]['result']).to include('enable' => 'true')
     end
   end
 
@@ -64,7 +64,7 @@ describe 'service task' do
         result = run_task('service', 'default', 'action' => 'status', 'name' => package_to_use)
         expect(result[0]).to include('status' => 'success')
         expect(result[0]['result']).to include('status' => 'stopped')
-        expect(result[0]['result']).to include('enabled' => 'true')
+        expect(result[0]['result']).to include('enable' => 'true')
       end
     end
   end
@@ -80,7 +80,7 @@ describe 'service task' do
         result = run_task('service', 'default', 'action' => 'status', 'name' => package_to_use)
         expect(result[0]).to include('status' => 'success')
         expect(result[0]['result']).to include('status' => 'running')
-        expect(result[0]['result']).to include('enabled' => 'true')
+        expect(result[0]['result']).to include('enable' => 'true')
       end
     end
   end
@@ -93,7 +93,7 @@ describe 'service task' do
 
       result = run_task('service', 'default', 'action' => 'status', 'name' => package_to_use)
       expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('enabled' => 'false')
+      expect(result[0]['result']).to include('enable' => 'false')
     end
   end
 end
