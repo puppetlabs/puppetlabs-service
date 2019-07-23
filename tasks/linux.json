@@ -11,5 +11,6 @@
       "description": "The name of the service to operate on.",
       "type": "String[1]"
     }
-  }
+  },
+  "files": ["service/files/common.sh"], "input_method": "environment"
 }

@@ -2,36 +2,8 @@
 
 # example cli /opt/puppetlabs/puppet/bin/bolt  task run service::linux action=stop name=ntp --nodes localhost --modulepath /etc/ puppetlabs/code/modules --password puppet --user root
 
-# Exit with an error message and error code, defaulting to 1
-fail() {
-  # Print a message: entry if there were anything printed to stderr
-  if [[ -s $_tmp ]]; then
-    # Hack to try and output valid json by replacing newlines with spaces.
-    error_data="{ \"msg\": \"$(tr '\n' ' ' <$_tmp)\", \"kind\": \"bash-error\", \"details\": {} }"
-  else
-    error_data="{ \"msg\": \"Task error\", \"kind\": \"bash-error\", \"details\": {} }"
-  fi
-  echo "{ \"status\": \"failure\", \"_error\": $error_data }"
-  exit ${2:-1}
-}
-
-success() {
-  echo "$1"
-  exit 0
-}
-
-validation_error() {
-  error_data="{ \"msg\": \""$1"\", \"kind\": \"bash-error\", \"details\": {} }"
-  echo "{ \"status\": \"failure\", \"_error\": $error_data }"
-  exit 255
-}
-
-# Keep stderr in a temp file.  Easier than `tee` or capturing process substitutions
-_tmp="$(mktemp)"
-exec 2>"$_tmp"
-
-action="$PT_action"
-name="$PT_name"
+declare PT__installdir
+source "$PT__installdir/service/files/common.sh"
 
 # Verify service manager is available
 service_managers=("systemctl" "service" "initctl")
