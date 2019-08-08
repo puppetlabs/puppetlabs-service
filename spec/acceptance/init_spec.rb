@@ -10,11 +10,11 @@ describe 'service task' do
       write_to_inventory_file(inventory_hash, 'inventory.yaml')
     end
     if os[:family] != 'windows'
-      if os[:family] == 'redhat' && os[:release].to_i < 6
-        params = { 'action' => 'stop', 'name' => 'syslog' }
-        run_bolt_task('service', params)
-      end
-      package_to_use = 'rsyslog'
+      package_to_use = if os[:family] == 'redhat'
+                         'httpd'
+                       else
+                         'apache2'
+                       end
       apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
     else
       package_to_use = 'W32Time'

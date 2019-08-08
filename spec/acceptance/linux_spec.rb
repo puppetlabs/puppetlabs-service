@@ -2,12 +2,13 @@
 require 'spec_helper_acceptance'
 
 describe 'linux service task', unless: os[:family] == 'windows' do
-  package_to_use = 'rsyslog'
+  package_to_use = if os[:family] == 'redhat'
+                     'httpd'
+                   else
+                     'apache2'
+                   end
+
   before(:all) do
-    if os[:family] == 'redhat' && os[:release].to_i < 6
-      params = { 'action' => 'stop', 'name' => 'syslog' }
-      run_bolt_task('service::linux', params)
-    end
     apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
   end
 
@@ -15,7 +16,9 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     it "stop #{package_to_use}" do
       result = run_bolt_task('service::linux', 'action' => 'stop', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{ActiveState=inactive|stop})
+      # The additional complexity in this matcher is to support Ubuntu 14.04
+      # For some reason it returns `service` instead of `systemctl` information.
+      expect(result['result']).to include('status' => %r{(ActiveState=(inactive|stop)| is (not running|stopped))})
     end
   end
 
