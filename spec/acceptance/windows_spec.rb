@@ -2,71 +2,68 @@
 require 'spec_helper_acceptance'
 
 describe 'windows service task', if: os[:family] == 'windows' do
-  include Beaker::TaskHelper::Inventory
-  include BoltSpec::Run
-
-  def bolt_config
-    { 'modulepath' => RSpec.configuration.module_path }
-  end
-
-  let(:bolt_inventory) { hosts_to_inventory.merge('features' => ['puppet-agent']) }
-
-  package_to_use = 'Spooler'
+  package_to_use = 'SessionEnv'
 
   describe 'stop action' do
     it "stop #{package_to_use}" do
-      result = run_task('service::windows', 'default', 'action' => 'stop', 'name' => package_to_use)
-      expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('status' => 'Stopped')
+      result = run_bolt_task('service::windows', 'action' => 'stop', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('status' => 'Stopped')
     end
   end
 
   describe 'start action' do
     it "start #{package_to_use}" do
-      result = run_task('service::windows', 'default', 'action' => 'start', 'name' => package_to_use)
-      expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('status' => 'Started')
+      result = run_bolt_task('service::windows', 'action' => 'start', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('status' => 'Started')
     end
   end
 
   describe 'restart action' do
     it "restart #{package_to_use}" do
-      result = run_task('service::windows', 'default', 'action' => 'restart', 'name' => package_to_use)
-      expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('status' => 'Restarted')
+      result = run_bolt_task('service::windows', 'action' => 'restart', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result.stdout).to match(%r{Restarted})
     end
   end
 
   describe 'status action' do
     it "status #{package_to_use}" do
-      result = run_task('service::windows', 'default', 'action' => 'status', 'name' => package_to_use)
-      expect(result[0]).to include('status' => 'success')
-      expect(result[0]['result']).to include('status' => 'Started')
-      expect(result[0]['result']).to include('enabled')
+      result = run_bolt_task('service::windows', 'action' => 'status', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('status' => 'Started')
+      expect(result['result']).to include('enabled')
     end
   end
 
   context 'when puppet-agent feature not available on target' do
-    let(:bolt_inventory) { hosts_to_inventory }
+    before(:all) do
+      unless ENV['TARGET_HOST'] == 'localhost'
+        inventory_hash = inventory_hash_from_inventory_file
+        inventory_hash = remove_feature_from_node(inventory_hash, 'puppet-agent', ENV['TARGET_HOST'])
+        write_to_inventory_file(inventory_hash, 'inventory.yaml')
+      end
+    end
 
     it 'enable action fails' do
+      skip('Cannot mock inventory features during localhost acceptance testing') if ENV['TARGET_HOST'] == 'localhost'
       params = { 'action' => 'enable', 'name' => package_to_use }
-      result = run_task('service', 'default', params)
-      expect(result[0]).to include('status' => 'failure')
-      expect(result[0]['result']).to include('status' => 'failure')
-      expect(result[0]['result']['_error']).to include('msg' => %r{'enable' action not supported})
-      expect(result[0]['result']['_error']).to include('kind' => 'powershell_error')
-      expect(result[0]['result']['_error']).to include('details')
+      result = run_bolt_task('service', params, expect_failures: true)
+      expect(result['result']).to include('status' => 'failure')
+      expect(result['result']['_error']).to include('msg' => %r{'enable' action not supported})
+      expect(result['result']['_error']).to include('kind' => 'powershell_error')
+      expect(result['result']['_error']).to include('details')
     end
 
     it 'disable action fails' do
+      skip('Cannot mock inventory features during localhost acceptance testing') if ENV['TARGET_HOST'] == 'localhost'
       params = { 'action' => 'disable', 'name' => package_to_use }
-      result = run_task('service', 'default', params)
-      expect(result[0]).to include('status' => 'failure')
-      expect(result[0]['result']).to include('status' => 'failure')
-      expect(result[0]['result']['_error']).to include('msg' => %r{'disable' action not supported})
-      expect(result[0]['result']['_error']).to include('kind' => 'powershell_error')
-      expect(result[0]['result']['_error']).to include('details')
+      result = run_bolt_task('service', params, expect_failures: true)
+      expect(result['result']).to include('status' => 'failure')
+      expect(result['result']['_error']).to include('msg' => %r{'disable' action not supported})
+      expect(result['result']['_error']).to include('kind' => 'powershell_error')
+      expect(result['result']['_error']).to include('details')
     end
   end
 end
