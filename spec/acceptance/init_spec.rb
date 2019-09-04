@@ -18,6 +18,7 @@ describe 'service task' do
       apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
     else
       package_to_use = 'W32Time'
+      params = { 'action' => 'enable', 'name' => package_to_use }
       params = { 'action' => 'start', 'name' => package_to_use }
       run_bolt_task('service', params)
     end
