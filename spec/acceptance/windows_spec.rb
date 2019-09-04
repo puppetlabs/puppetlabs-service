@@ -2,7 +2,12 @@
 require 'spec_helper_acceptance'
 
 describe 'windows service task', if: os[:family] == 'windows' do
-  package_to_use = 'SessionEnv'
+  package_to_use = 'W32Time'
+
+  before(:all) do
+    # Ensure the service is enabled before interacting.
+    result = run_bolt_task('service', 'action' => 'enable', 'name' => package_to_use)
+  end
 
   describe 'stop action' do
     it "stop #{package_to_use}" do
