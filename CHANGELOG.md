@@ -2,9 +2,20 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v1.0.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.0.0) (2019-04-24)
+## [v1.1.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.1.0) (2019-09-20)
 
-[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v0.6.0...v1.0.0)
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/1.0.0...v1.1.0)
+
+### Added
+
+- \(FM-8212\) Convert to acceptance testing to litmus [\#103](https://github.com/puppetlabs/puppetlabs-service/pull/103) ([michaeltlombardi](https://github.com/michaeltlombardi))
+- \(MODULES-9230\) Force Windows Service Action [\#99](https://github.com/puppetlabs/puppetlabs-service/pull/99) ([RandomNoun7](https://github.com/RandomNoun7))
+- \(FM-8159\) Add Windows Server 2019 support [\#98](https://github.com/puppetlabs/puppetlabs-service/pull/98) ([eimlav](https://github.com/eimlav))
+- \(FM-8047\) Add RedHat8 as supported OS [\#97](https://github.com/puppetlabs/puppetlabs-service/pull/97) ([michaeltlombardi](https://github.com/michaeltlombardi))
+
+## [1.0.0](https://github.com/puppetlabs/puppetlabs-service/tree/1.0.0) (2019-04-24)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v0.6.0...1.0.0)
 
 ### Changed
 
