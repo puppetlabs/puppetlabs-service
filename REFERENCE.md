@@ -31,6 +31,12 @@ Data type: `String[1]`
 
 The name of the service to operate on.
 
+##### `force`
+
+Data type: `Optional[Boolean]`
+
+Force a Windows service to restart even if it has dependent services. This parameter is passed for Windows services only.
+
 ##### `provider`
 
 Data type: `Optional[String[1]]`
@@ -76,4 +82,10 @@ The operation (start, stop, restart, status) to perform on the service
 Data type: `String[1]`
 
 The short name of the Windows service to operate on.
+
+##### `force`
+
+Data type: `Optional[Boolean]`
+
+Force the service to stop or restart, even if other services depend on it
 
