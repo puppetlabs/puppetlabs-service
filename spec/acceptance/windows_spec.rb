@@ -2,7 +2,12 @@
 require 'spec_helper_acceptance'
 
 describe 'windows service task', if: os[:family] == 'windows' do
-  package_to_use = 'SessionEnv'
+  package_to_use = 'W32Time'
+
+  before(:all) do
+    # Ensure the service is enabled before interacting.
+    run_bolt_task('service', 'action' => 'enable', 'name' => package_to_use)
+  end
 
   describe 'stop action' do
     it "stop #{package_to_use}" do
@@ -39,15 +44,12 @@ describe 'windows service task', if: os[:family] == 'windows' do
 
   context 'when puppet-agent feature not available on target' do
     before(:all) do
-      unless ENV['TARGET_HOST'] == 'localhost'
-        inventory_hash = inventory_hash_from_inventory_file
-        inventory_hash = remove_feature_from_node(inventory_hash, 'puppet-agent', ENV['TARGET_HOST'])
-        write_to_inventory_file(inventory_hash, 'inventory.yaml')
-      end
+      target = targeting_localhost? ? 'litmus_localhost' : ENV['TARGET_HOST']
+      inventory_hash = remove_feature_from_node(inventory_hash_from_inventory_file, 'puppet-agent', target)
+      write_to_inventory_file(inventory_hash, 'inventory.yaml')
     end
 
     it 'enable action fails' do
-      skip('Cannot mock inventory features during localhost acceptance testing') if ENV['TARGET_HOST'] == 'localhost'
       params = { 'action' => 'enable', 'name' => package_to_use }
       result = run_bolt_task('service', params, expect_failures: true)
       expect(result['result']).to include('status' => 'failure')
@@ -57,7 +59,6 @@ describe 'windows service task', if: os[:family] == 'windows' do
     end
 
     it 'disable action fails' do
-      skip('Cannot mock inventory features during localhost acceptance testing') if ENV['TARGET_HOST'] == 'localhost'
       params = { 'action' => 'disable', 'name' => package_to_use }
       result = run_bolt_task('service', params, expect_failures: true)
       expect(result['result']).to include('status' => 'failure')

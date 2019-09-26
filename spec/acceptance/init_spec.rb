@@ -4,11 +4,10 @@ require 'spec_helper_acceptance'
 describe 'service task' do
   package_to_use = ''
   before(:all) do
-    unless ENV['TARGET_HOST'] == 'localhost'
-      inventory_hash = inventory_hash_from_inventory_file
-      add_feature_to_node(inventory_hash, 'puppet-agent', ENV['TARGET_HOST'])
-      write_to_inventory_file(inventory_hash, 'inventory.yaml')
-    end
+    inventory_hash = inventory_hash_from_inventory_file
+    target = targeting_localhost? ? 'litmus_localhost' : ENV['TARGET_HOST']
+    add_feature_to_node(inventory_hash, 'puppet-agent', target)
+    write_to_inventory_file(inventory_hash, 'inventory.yaml')
     if os[:family] != 'windows'
       package_to_use = if os[:family] == 'redhat'
                          'httpd'
@@ -18,6 +17,8 @@ describe 'service task' do
       apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
     else
       package_to_use = 'W32Time'
+      params = { 'action' => 'enable', 'name' => package_to_use }
+      run_bolt_task('service', params)
       params = { 'action' => 'start', 'name' => package_to_use }
       run_bolt_task('service', params)
     end
