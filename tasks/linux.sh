@@ -6,7 +6,7 @@ declare PT__installdir
 source "$PT__installdir/service/files/common.sh"
 
 # Verify service manager is available
-service_managers=("systemctl" "initctl" "service")
+service_managers=("systemctl" "service" "initctl")
 
 for service in "${service_managers[@]}"; do
   if type "$service" &>/dev/null; then
