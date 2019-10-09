@@ -3,10 +3,15 @@ require 'spec_helper_acceptance'
 
 describe 'windows service task', if: os[:family] == 'windows' do
   package_to_use = 'W32Time'
+  temp_inventory_file = "#{ENV['TARGET_HOST']}.yaml"
 
   before(:all) do
     # Ensure the service is enabled before interacting.
-    run_bolt_task('service', 'action' => 'enable', 'name' => package_to_use)
+    if ENV['TARGET_HOST'] == 'localhost'
+      run_bolt_task('service', 'action' => 'start', 'name' => package_to_use)
+    else
+      run_bolt_task('service', 'action' => 'enable', 'name' => package_to_use)
+    end
   end
 
   describe 'stop action' do
@@ -42,16 +47,19 @@ describe 'windows service task', if: os[:family] == 'windows' do
     end
   end
 
-  context 'when puppet-agent feature not available on target' do
+  context 'when puppet-agent feature not available on target', if: (ENV['TARGET_HOST'] != 'localhost' && os[:family] == 'windows') do
     before(:all) do
-      target = targeting_localhost? ? 'litmus_localhost' : ENV['TARGET_HOST']
-      inventory_hash = remove_feature_from_node(inventory_hash_from_inventory_file, 'puppet-agent', target)
-      write_to_inventory_file(inventory_hash, 'inventory.yaml')
+      inventory_hash = remove_feature_from_node(inventory_hash_from_inventory_file, 'puppet-agent', ENV['TARGET_HOST'])
+      write_to_inventory_file(inventory_hash, temp_inventory_file)
+    end
+
+    after(:all) do
+      File.delete(temp_inventory_file) if File.exist?(temp_inventory_file)
     end
 
     it 'enable action fails' do
       params = { 'action' => 'enable', 'name' => package_to_use }
-      result = run_bolt_task('service', params, expect_failures: true)
+      result = run_bolt_task('service', params, expect_failures: true, inventory_file: temp_inventory_file)
       expect(result['result']).to include('status' => 'failure')
       expect(result['result']['_error']).to include('msg' => %r{'enable' action not supported})
       expect(result['result']['_error']).to include('kind' => 'powershell_error')
@@ -60,7 +68,7 @@ describe 'windows service task', if: os[:family] == 'windows' do
 
     it 'disable action fails' do
       params = { 'action' => 'disable', 'name' => package_to_use }
-      result = run_bolt_task('service', params, expect_failures: true)
+      result = run_bolt_task('service', params, expect_failures: true, inventory_file: temp_inventory_file)
       expect(result['result']).to include('status' => 'failure')
       expect(result['result']['_error']).to include('msg' => %r{'disable' action not supported})
       expect(result['result']['_error']).to include('kind' => 'powershell_error')
