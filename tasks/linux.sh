@@ -30,7 +30,7 @@ esac
 case "$available_manager" in
   "systemctl")
     if [[ $action != "status" ]]; then
-      "$service" "$action" "$name" || fail
+      "$service" "$action" "$name" 2>"$_tmp" || fail
     fi
 
     # `systemctl show` is the command to use in scripts.  Use it to get the pid, load, and active states
@@ -40,7 +40,7 @@ case "$available_manager" in
     if [[ $action != "status" ]]; then
       success "{ \"status\": \"${cmd_out}\" }"
     else
-      enabled_out="$("$service" "is-enabled" "$name")"
+      enabled_out="$("$service" "is-enabled" "$name" 2>&1)"
       success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
     fi
     ;;
@@ -51,26 +51,24 @@ case "$available_manager" in
       cmd=("$service" "$name" "$action")
       cmd_status=("$service" "$name" "status")
       # The chkconfig output has 'interesting' spacing/tabs, use word splitting to have single spaces
-      word_split=($(chkconfig --list "$name"))
-      enabled_out="${word_split[@]}"
+      word_split=($(chkconfig --list "$name" 2>&1))
     else
-      cmd=("$service" "$action" "$name")
-      cmd_status=("$service" "status" "$name")
-      enabled_out="$("$service" "show-config" "$name")"
+      word_split=($("$service" "$name" "show-config"  2>&1))
     fi
+    enabled_out="${word_split[@]}"
 
     if [[ $action != "status" ]]; then
       # service and initctl may return non-zero if the service is already started or stopped
       # If so, check for either "already running" or "Unknown instance" in the output before failing
-      "${cmd[@]}" >/dev/null || {
-        grep -q "Job is already running" "$_tmp" || grep -q "Unknown instance:" "$_tmp" || fail
+      "${cmd[@]}" &>"$_tmp" || {
+        grep -q "already running" "$_tmp" || grep -q "Unknown instance:" "$_tmp" || grep -q "is not running" "$_tmp" || fail
       }
 
-      cmd_out="$("${cmd_status[@]}")"
+      cmd_out="$("${cmd_status[@]}" 2>&1)"
       success "{ \"status\": \"${cmd_out}\" }"
     fi
 
     # "status" is already pretty terse for these commands
-    cmd_out="$("${cmd_status[@]}")"
+    cmd_out="$("${cmd_status[@]}" 2>&1)"
     success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
 esac
