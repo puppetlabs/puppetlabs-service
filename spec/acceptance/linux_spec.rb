@@ -38,6 +38,19 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     end
   end
 
+  context 'when a service does not exist' do
+    let(:non_existent_service) { 'foo' }
+
+    it 'reports useful information for status' do
+      params = { 'action' => 'restart', 'name' => 'foo' }
+      result = run_bolt_task('service::linux', params, expect_failures: true)
+      expect(result['result']).to include('status' => 'failure')
+      expect(result['result']['_error']).to include('msg' => %r{#{non_existent_service}})
+      expect(result['result']['_error']).to include('kind' => 'bash-error')
+      expect(result['result']['_error']).to include('details')
+    end
+  end
+
   context 'when puppet-agent feature not available on target' do
     before(:all) do
       target = targeting_localhost? ? 'litmus_localhost' : ENV['TARGET_HOST']
