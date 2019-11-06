@@ -4,10 +4,6 @@ require 'spec_helper_acceptance'
 describe 'service task' do
   package_to_use = ''
   before(:all) do
-    inventory_hash = inventory_hash_from_inventory_file
-    target = targeting_localhost? ? 'litmus_localhost' : ENV['TARGET_HOST']
-    add_feature_to_node(inventory_hash, 'puppet-agent', target)
-    write_to_inventory_file(inventory_hash, 'inventory.yaml')
     if os[:family] != 'windows'
       package_to_use = if os[:family] == 'redhat'
                          'httpd'
@@ -17,14 +13,12 @@ describe 'service task' do
       apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
     else
       package_to_use = 'W32Time'
-      params = { 'action' => 'enable', 'name' => package_to_use }
-      run_bolt_task('service', params)
       params = { 'action' => 'start', 'name' => package_to_use }
       run_bolt_task('service', params)
     end
   end
 
-  describe 'enable action' do
+  describe 'enable action', unless: (os[:family] == 'windows') do
     it 'enable/status a service' do
       result = run_bolt_task('service', 'action' => 'enable', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
@@ -40,12 +34,12 @@ describe 'service task' do
     it 'restart/status a service' do
       result = run_bolt_task('service', 'action' => 'restart', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => 'restarted')
+      expect(result['result']).to include('status' => %r{restarted|Restarted})
 
       result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => 'running')
-      expect(result['result']).to include('enabled' => 'true')
+      expect(result['result']).to include('status' => %r{running|Started})
+      expect(result['result']).to include('enabled' => %r{true|Manual|Automatic})
     end
   end
 
@@ -53,14 +47,14 @@ describe 'service task' do
     it 'stop/status a service' do
       result = run_bolt_task('service', 'action' => 'stop', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{in_sync|stopped})
+      expect(result['result']).to include('status' => %r{in_sync|stopped|Stopped})
 
       # Debian can give incorrect status
       unless ['debian', 'ubuntu'].include?(os[:family])
         result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
         expect(result.exit_code).to eq(0)
-        expect(result['result']).to include('status' => 'stopped')
-        expect(result['result']).to include('enabled' => 'true')
+        expect(result['result']).to include('status' => %r{stopped|Stopped})
+        expect(result['result']).to include('enabled' => %r{true|Manual|Automatic})
       end
     end
   end
@@ -69,19 +63,19 @@ describe 'service task' do
     it 'start/status a service' do
       result = run_bolt_task('service', 'action' => 'start', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{in_sync|started})
+      expect(result['result']).to include('status' => %r{in_sync|started|Started})
 
       # Debian can give incorrect status
-      if os[:family] != 'debian'
+      unless ['debian', 'ubuntu'].include?(os[:family])
         result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
         expect(result.exit_code).to eq(0)
-        expect(result['result']).to include('status' => 'running')
-        expect(result['result']).to include('enabled' => 'true')
+        expect(result['result']).to include('status' => %r{running|Started})
+        expect(result['result']).to include('enabled' => %r{true|Manual|Automatic})
       end
     end
   end
 
-  describe 'disable action' do
+  describe 'disable action', unless: (os[:family] == 'windows') do
     it 'disable/status a service' do
       result = run_bolt_task('service', 'action' => 'disable', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
