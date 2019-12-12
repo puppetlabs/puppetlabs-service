@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.2.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.2.0) (2019-12-12)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v1.1.0...v1.2.0)
+
+### Added
+
+- \(FM-8695\) - Addition of Support for CentOS 8 [\#124](https://github.com/puppetlabs/puppetlabs-service/pull/124) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- \(MAINT\) Fix Case Statement Logic [\#117](https://github.com/puppetlabs/puppetlabs-service/pull/117) ([RandomNoun7](https://github.com/RandomNoun7))
+- \(MODULES-9979\) Fix empty return values in Linux task [\#116](https://github.com/puppetlabs/puppetlabs-service/pull/116) ([michaeltlombardi](https://github.com/michaeltlombardi))
+
 ## [v1.1.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.1.0) (2019-09-20)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/1.0.0...v1.1.0)
