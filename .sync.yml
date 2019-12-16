@@ -9,7 +9,7 @@
   branches:
   - release
   includes:
-  - bundler_args:
+  - bundler_args: 
     env: PLATFORMS=deb_puppet5
     rvm: 2.5.1
     before_script:
@@ -22,7 +22,7 @@
     services: docker
     sudo: required
     stage: acceptance
-  - bundler_args:
+  - bundler_args: 
     env: PLATFORMS=deb_puppet6
     rvm: 2.5.1
     before_script:
@@ -35,7 +35,7 @@
     services: docker
     sudo: required
     stage: acceptance
-  - bundler_args:
+  - bundler_args: 
     env: PLATFORMS=el_puppet5
     rvm: 2.5.1
     before_script:
@@ -47,7 +47,7 @@
     services: docker
     sudo: required
     stage: acceptance
-  - bundler_args:
+  - bundler_args: 
     env: PLATFORMS=el_puppet6
     rvm: 2.5.1
     before_script:
@@ -60,6 +60,10 @@
     sudo: required
     stage: acceptance
   simplecov: true
+  notifications:
+    slack:
+      secure: >-
+        EtyvcUX7n4eFSO5B2h5nH0PJXRJv4FpuJ2SjHuMjALlsHiYrNL2JA+t/PXF6xPLvWNs+pH2rWwBAXDzgR4Ltj3eiaN4UuM8Dvt+KmQ1h0ez2eATpmN47aZ4TueiMkSiUVzWT9aSZa85lS1nr9VcRuFLmTLVU1FH01Uu//5uiZkbcU5kODlkFYsT1/oUXEAA2U6MQdANRKYD2RFHb/M21RoV0rIjLy16cwOuHiXMvIb0tzWQOfauKI9byofK/oq+uryLmbAHeT3IYGCqggvrMVf7D6IsQgit83BRWR7hXKd6HNZUbdZvUEdRMtFhu3jH86BVrObNKZ/6aO5/e49yzsaZMXIvNjvQBs3na7TP7GuaDpDAasjaRUgNyGX3v+ALATFScL7RmdBngmLOVCyjPQ3BS5xtiiq7lnbNBPHD+pWaX+0KLcLtwFWUIz15XkLVTfWZ3LafuwSGiOtA5FK3NiuXxtHr6sLJIw5GMj4K0skUsGUR4P7V+fk4iS+nJtqd4wrZRgCEHUFhkPUfkR3c8LYfqqpe5EdFAK2ZBwqy5z3o7jtSLf4Q786OfMp+v9KcqDREMCkIy+zKafpVmSKV77zYZUdJ+F7rNikqWwqIXU9YFNyeWvIKoikc/YfLY0kXFOVU4yIcWS2lmtzS/tSGy0QS1E0PrbvqJ2Ubrk6djJEY=
 appveyor.yml:
   use_litmus: true
   matrix_extras:
