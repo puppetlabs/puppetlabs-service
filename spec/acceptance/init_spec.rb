@@ -34,12 +34,12 @@ describe 'service task' do
     it 'restart/status a service' do
       result = run_bolt_task('service', 'action' => 'restart', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{restarted|Restarted})
+      expect(result['result']).to include('status' => %r{restarted}i)
 
       result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{running|Started})
-      expect(result['result']).to include('enabled' => %r{true|Manual|Automatic})
+      expect(result['result']).to include('status' => %r{running|Started}i)
+      expect(result['result']).to include('enabled' => %r{true|manual|automatic}i)
     end
   end
 
@@ -47,14 +47,14 @@ describe 'service task' do
     it 'stop/status a service' do
       result = run_bolt_task('service', 'action' => 'stop', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{in_sync|stopped|Stopped})
+      expect(result['result']).to include('status' => %r{in_sync|stopped}i)
 
       # Debian can give incorrect status
       unless ['debian', 'ubuntu'].include?(os[:family])
         result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
         expect(result.exit_code).to eq(0)
-        expect(result['result']).to include('status' => %r{stopped|Stopped})
-        expect(result['result']).to include('enabled' => %r{true|Manual|Automatic})
+        expect(result['result']).to include('status' => %r{stopped}i)
+        expect(result['result']).to include('enabled' => %r{true|manual|automatic}i)
       end
     end
   end
@@ -63,14 +63,14 @@ describe 'service task' do
     it 'start/status a service' do
       result = run_bolt_task('service', 'action' => 'start', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{in_sync|started|Started})
+      expect(result['result']).to include('status' => %r{in_sync|started}i)
 
       # Debian can give incorrect status
       unless ['debian', 'ubuntu'].include?(os[:family])
         result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
         expect(result.exit_code).to eq(0)
-        expect(result['result']).to include('status' => %r{running|Started})
-        expect(result['result']).to include('enabled' => %r{true|Manual|Automatic})
+        expect(result['result']).to include('status' => %r{running|Started}i)
+        expect(result['result']).to include('enabled' => %r{true|manual|automatic}i)
       end
     end
   end
