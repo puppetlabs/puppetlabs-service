@@ -1,4 +1,5 @@
 ---
+os: linux
 dist: xenial
 language: ruby
 cache: bundler
@@ -23,9 +24,105 @@ stages:
   - static
   - spec
   - acceptance
-matrix:
+jobs:
   fast_finish: true
   include:
+    -
+      before_script:
+      - "bundle exec rake 'litmus:provision_list[travis_deb]'"
+      - "bundle exec rake 'litmus:install_agent[puppet5]'"
+      - "bundle exec rake litmus:install_module"
+      bundler_args: 
+      dist: trusty
+      env: PLATFORMS=travis_deb_puppet5
+      rvm: 2.5.3
+      script: ["bundle exec rake litmus:acceptance:parallel"]
+      services: docker
+      stage: acceptance
+    -
+      before_script:
+      - "bundle exec rake 'litmus:provision_list[travis_ub]'"
+      - "bundle exec rake 'litmus:install_agent[puppet5]'"
+      - "bundle exec rake litmus:install_module"
+      bundler_args: 
+      dist: trusty
+      env: PLATFORMS=travis_ub_puppet5
+      rvm: 2.5.3
+      script: ["bundle exec rake litmus:acceptance:parallel"]
+      services: docker
+      stage: acceptance
+    -
+      before_script:
+      - "bundle exec rake 'litmus:provision_list[travis_el6]'"
+      - "bundle exec rake 'litmus:install_agent[puppet5]'"
+      - "bundle exec rake litmus:install_module"
+      bundler_args: 
+      dist: trusty
+      env: PLATFORMS=travis_el6_puppet5
+      rvm: 2.5.3
+      script: ["bundle exec rake litmus:acceptance:parallel"]
+      services: docker
+      stage: acceptance
+    -
+      before_script:
+      - "bundle exec rake 'litmus:provision_list[travis_el7]'"
+      - "bundle exec rake 'litmus:install_agent[puppet5]'"
+      - "bundle exec rake litmus:install_module"
+      bundler_args: 
+      dist: trusty
+      env: PLATFORMS=travis_el7_puppet5
+      rvm: 2.5.3
+      script: ["bundle exec rake litmus:acceptance:parallel"]
+      services: docker
+      stage: acceptance
+    -
+      before_script:
+      - "bundle exec rake 'litmus:provision_list[travis_deb]'"
+      - "bundle exec rake 'litmus:install_agent[puppet6]'"
+      - "bundle exec rake litmus:install_module"
+      bundler_args: 
+      dist: trusty
+      env: PLATFORMS=travis_deb_puppet6
+      rvm: 2.5.3
+      script: ["bundle exec rake litmus:acceptance:parallel"]
+      services: docker
+      stage: acceptance
+    -
+      before_script:
+      - "bundle exec rake 'litmus:provision_list[travis_ub]'"
+      - "bundle exec rake 'litmus:install_agent[puppet6]'"
+      - "bundle exec rake litmus:install_module"
+      bundler_args: 
+      dist: trusty
+      env: PLATFORMS=travis_ub_puppet6
+      rvm: 2.5.3
+      script: ["bundle exec rake litmus:acceptance:parallel"]
+      services: docker
+      stage: acceptance
+    -
+      before_script:
+      - "bundle exec rake 'litmus:provision_list[travis_el6]'"
+      - "bundle exec rake 'litmus:install_agent[puppet6]'"
+      - "bundle exec rake litmus:install_module"
+      bundler_args: 
+      dist: trusty
+      env: PLATFORMS=travis_el6_puppet6
+      rvm: 2.5.3
+      script: ["bundle exec rake litmus:acceptance:parallel"]
+      services: docker
+      stage: acceptance
+    -
+      before_script:
+      - "bundle exec rake 'litmus:provision_list[travis_el7]'"
+      - "bundle exec rake 'litmus:install_agent[puppet6]'"
+      - "bundle exec rake litmus:install_module"
+      bundler_args: 
+      dist: trusty
+      env: PLATFORMS=travis_el7_puppet6
+      rvm: 2.5.3
+      script: ["bundle exec rake litmus:acceptance:parallel"]
+      services: docker
+      stage: acceptance
     -
       env: CHECK="check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop syntax lint metadata_lint"
       stage: static
@@ -37,86 +134,6 @@ matrix:
       env: PUPPET_GEM_VERSION="~> 6.0" CHECK=parallel_spec
       rvm: 2.5.3
       stage: spec
-    -
-      before_script: ["bundle exec rake 'litmus:provision_list[travis_deb]'", "bundle exec bolt command run 'apt-get install wget -y' --inventoryfile inventory.yaml --nodes='localhost*'", "bundle exec rake 'litmus:install_agent[puppet5]'", "bundle exec rake litmus:install_module"]
-      bundler_args: 
-      dist: trusty
-      env: PLATFORMS=deb_puppet5
-      rvm: 2.5.1
-      script: ["bundle exec rake litmus:acceptance:parallel"]
-      services: docker
-      stage: acceptance
-      sudo: required
-    -
-      before_script: ["bundle exec rake 'litmus:provision_list[travis_deb]'", "bundle exec bolt command run 'apt-get install wget -y' --inventoryfile inventory.yaml --nodes='localhost*'", "bundle exec rake 'litmus:install_agent[puppet6]'", "bundle exec rake litmus:install_module"]
-      bundler_args: 
-      dist: trusty
-      env: PLATFORMS=deb_puppet6
-      rvm: 2.5.1
-      script: ["bundle exec rake litmus:acceptance:parallel"]
-      services: docker
-      stage: acceptance
-      sudo: required
-    -
-      before_script: ["bundle exec rake 'litmus:provision_list[travis_ub]'", "bundle exec bolt command run 'apt-get install wget -y' --inventoryfile inventory.yaml --nodes='localhost*'", "bundle exec rake 'litmus:install_agent[puppet5]'", "bundle exec rake litmus:install_module"]
-      bundler_args: 
-      dist: trusty
-      env: PLATFORMS=ub_puppet5
-      rvm: 2.5.1
-      script: ["bundle exec rake litmus:acceptance:parallel"]
-      services: docker
-      stage: acceptance
-      sudo: required
-    -
-      before_script: ["bundle exec rake 'litmus:provision_list[travis_ub]'", "bundle exec bolt command run 'apt-get install wget -y' --inventoryfile inventory.yaml --nodes='localhost*'", "bundle exec rake 'litmus:install_agent[puppet6]'", "bundle exec rake litmus:install_module"]
-      bundler_args: 
-      dist: trusty
-      env: PLATFORMS=ub_puppet6
-      rvm: 2.5.1
-      script: ["bundle exec rake litmus:acceptance:parallel"]
-      services: docker
-      stage: acceptance
-      sudo: required
-    -
-      before_script: ["bundle exec rake 'litmus:provision_list[travis_el6]'", "bundle exec rake 'litmus:install_agent[puppet5]'", "bundle exec rake litmus:install_module"]
-      bundler_args: 
-      dist: trusty
-      env: PLATFORMS=el6_puppet5
-      rvm: 2.5.1
-      script: ["bundle exec rake litmus:acceptance:parallel"]
-      services: docker
-      stage: acceptance
-      sudo: required
-    -
-      before_script: ["bundle exec rake 'litmus:provision_list[travis_el6]'", "bundle exec rake 'litmus:install_agent[puppet6]'", "bundle exec rake litmus:install_module"]
-      bundler_args: 
-      dist: trusty
-      env: PLATFORMS=el6_puppet6
-      rvm: 2.5.1
-      script: ["bundle exec rake litmus:acceptance:parallel"]
-      services: docker
-      stage: acceptance
-      sudo: required
-    -
-      before_script: ["bundle exec rake 'litmus:provision_list[travis_el7]'", "bundle exec rake 'litmus:install_agent[puppet5]'", "bundle exec rake litmus:install_module"]
-      bundler_args: 
-      dist: trusty
-      env: PLATFORMS=el7_puppet5
-      rvm: 2.5.1
-      script: ["bundle exec rake litmus:acceptance:parallel"]
-      services: docker
-      stage: acceptance
-      sudo: required
-    -
-      before_script: ["bundle exec rake 'litmus:provision_list[travis_el7]'", "bundle exec rake 'litmus:install_agent[puppet6]'", "bundle exec rake litmus:install_module"]
-      bundler_args: 
-      dist: trusty
-      env: PLATFORMS=el7_puppet6
-      rvm: 2.5.1
-      script: ["bundle exec rake litmus:acceptance:parallel"]
-      services: docker
-      stage: acceptance
-      sudo: required
 branches:
   only:
     - master
@@ -128,7 +145,7 @@ notifications:
     secure: EtyvcUX7n4eFSO5B2h5nH0PJXRJv4FpuJ2SjHuMjALlsHiYrNL2JA+t/PXF6xPLvWNs+pH2rWwBAXDzgR4Ltj3eiaN4UuM8Dvt+KmQ1h0ez2eATpmN47aZ4TueiMkSiUVzWT9aSZa85lS1nr9VcRuFLmTLVU1FH01Uu//5uiZkbcU5kODlkFYsT1/oUXEAA2U6MQdANRKYD2RFHb/M21RoV0rIjLy16cwOuHiXMvIb0tzWQOfauKI9byofK/oq+uryLmbAHeT3IYGCqggvrMVf7D6IsQgit83BRWR7hXKd6HNZUbdZvUEdRMtFhu3jH86BVrObNKZ/6aO5/e49yzsaZMXIvNjvQBs3na7TP7GuaDpDAasjaRUgNyGX3v+ALATFScL7RmdBngmLOVCyjPQ3BS5xtiiq7lnbNBPHD+pWaX+0KLcLtwFWUIz15XkLVTfWZ3LafuwSGiOtA5FK3NiuXxtHr6sLJIw5GMj4K0skUsGUR4P7V+fk4iS+nJtqd4wrZRgCEHUFhkPUfkR3c8LYfqqpe5EdFAK2ZBwqy5z3o7jtSLf4Q786OfMp+v9KcqDREMCkIy+zKafpVmSKV77zYZUdJ+F7rNikqWwqIXU9YFNyeWvIKoikc/YfLY0kXFOVU4yIcWS2lmtzS/tSGy0QS1E0PrbvqJ2Ubrk6djJEY=
 deploy:
   provider: puppetforge
-  user: puppet
+  username: puppet
   password:
     secure: ""
   on:
