@@ -1,6 +1,8 @@
 # run a test task
 require 'spec_helper_acceptance'
 
+sysv = (os[:family] == 'redhat' && os[:release].to_i == 6) ||
+       (os[:family] == 'debian' && os[:release].to_i == 14)
 describe 'linux service task', unless: os[:family] == 'windows' do
   package_to_use = if os[:family] == 'redhat'
                      'httpd'
@@ -40,6 +42,22 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     end
   end
 
+  describe 'enable action', unless: sysv do
+    it "enable #{package_to_use}" do
+      result = run_bolt_task('service::linux', 'action' => 'enable', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('enabled' => 'enabled')
+    end
+  end
+
+  describe 'disable action', unless: sysv do
+    it "disable #{package_to_use}" do
+      result = run_bolt_task('service::linux', 'action' => 'disable', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('enabled' => 'disabled')
+    end
+  end
+
   context 'when a service does not exist' do
     let(:non_existent_service) { 'foo' }
 
@@ -64,22 +82,11 @@ describe 'linux service task', unless: os[:family] == 'windows' do
       File.delete(temp_inventory_file) if File.exist?(temp_inventory_file)
     end
 
-    it 'enable action fails' do
-      params = { 'action' => 'enable', 'name' => package_to_use }
-      result = run_bolt_task('service', params, expect_failures: true, inventory_file: temp_inventory_file)
-      expect(result['result']).to include('status' => 'failure')
-      expect(result['result']['_error']).to include('msg' => %r{'enable' action not supported})
-      expect(result['result']['_error']).to include('kind' => 'bash-error')
-      expect(result['result']['_error']).to include('details')
-    end
-
-    it 'disable action fails' do
-      params = { 'action' => 'disable', 'name' => package_to_use }
-      result = run_bolt_task('service', params, expect_failures: true, inventory_file: temp_inventory_file)
-      expect(result['result']).to include('status' => 'failure')
-      expect(result['result']['_error']).to include('msg' => %r{'disable' action not supported})
-      expect(result['result']['_error']).to include('kind' => 'bash-error')
-      expect(result['result']['_error']).to include('details')
+    it 'does not use the ruby task' do
+      params = { 'action' => 'restart', 'name' => package_to_use }
+      result = run_bolt_task('service', params, inventory_file: temp_inventory_file)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('status' => %r{ActiveState=active|running})
     end
   end
 end

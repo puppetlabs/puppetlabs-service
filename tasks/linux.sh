@@ -21,7 +21,7 @@ done
 
 # Verify only allowable actions are specified
 case "$action" in
-  "start"|"stop"|"restart"|"status");;
+  "start"|"stop"|"restart"|"status"|"enable"|"disable");;
   *) validation_error "'${action}' action not supported for linux.sh"
 esac
 
@@ -37,15 +37,19 @@ case "$available_manager" in
     # sample output: "MainPID=23377,LoadState=loaded,ActiveState=active"
     cmd_out="$("$service" "show" "$name" -p LoadState -p MainPID -p ActiveState --no-pager | paste -sd ',' -)"
 
-    if [[ $action != "status" ]]; then
-      success "{ \"status\": \"${cmd_out}\" }"
-    else
+    if [[ $action == "status" || $action == "enable" || $action == "disable" ]]; then
       enabled_out="$("$service" "is-enabled" "$name" 2>&1)"
       success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
+    else
+      success "{ \"status\": \"${cmd_out}\" }"
     fi
     ;;
 
   "initctl")
+    if [[ $action == "enable" || $action == "disable" ]]; then
+      validation_error "'${action}' action not supported for initctl"
+    fi
+
     cmd=("$service" "$action" "$name")
     cmd_status=("$service" "status" "$name")
 
@@ -70,6 +74,10 @@ case "$available_manager" in
     ;;
 
   "service")
+    if [[ $action == "enable" || $action == "disable" ]]; then
+      validation_error "'${action}' action not supported for initctl"
+    fi
+
     cmd=("$service" "$name" "$action")
     cmd_status=("$service" "$name" "status")
 
