@@ -37,6 +37,23 @@ describe 'linux service task', unless: os[:family] == 'windows' do
       expect(result['result']).to include('status' => %r{ActiveState=active|running})
     end
   end
+  
+  describe 'enable action' do
+    it "enable #{package_to_use}" do
+      result = run_bolt_task('service::linux', 'action' => 'enable', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('enabled' => 'enabled')
+    end
+  end
+
+  describe 'disable action' do
+    it "disable #{package_to_use}" do
+      result = run_bolt_task('service::linux', 'action' => 'disable', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('enabled' => 'disabled')
+    end
+  end
+
 
   context 'when puppet-agent feature not available on target' do
     before(:all) do
@@ -47,24 +64,10 @@ describe 'linux service task', unless: os[:family] == 'windows' do
       end
     end
 
-    it 'enable action fails' do
-      skip('Cannot mock inventory features during localhost acceptance testing') if ENV['TARGET_HOST'] == 'localhost'
-      params = { 'action' => 'enable', 'name' => package_to_use }
-      result = run_bolt_task('service', params, expect_failures: true)
-      expect(result['result']).to include('status' => 'failure')
-      expect(result['result']['_error']).to include('msg' => %r{'enable' action not supported})
-      expect(result['result']['_error']).to include('kind' => 'bash-error')
-      expect(result['result']['_error']).to include('details')
-    end
-
-    it 'disable action fails' do
-      skip('Cannot mock inventory features during localhost acceptance testing') if ENV['TARGET_HOST'] == 'localhost'
-      params = { 'action' => 'disable', 'name' => package_to_use }
-      result = run_bolt_task('service', params, expect_failures: true)
-      expect(result['result']).to include('status' => 'failure')
-      expect(result['result']['_error']).to include('msg' => %r{'disable' action not supported})
-      expect(result['result']['_error']).to include('kind' => 'bash-error')
-      expect(result['result']['_error']).to include('details')
+    it 'does not use the ruby task' do
+      result = run_bolt_task('service', 'action' => 'restart', 'name' => package_to_use)
+      expect(result.exit_code).to eq(0)
+      expect(result['result']).to include('status' => %r{ActiveState=active|running})
     end
   end
 end

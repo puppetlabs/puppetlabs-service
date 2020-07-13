@@ -4,8 +4,8 @@
   "input_method": "environment",
   "parameters": {
     "action": {
-      "description": "The operation (start, stop, restart, status) to perform on the service.",
-      "type": "Enum[start, stop, restart, status]"
+      "description": "The operation (start, stop, restart, status, enable, disable) to perform on the service.",
+      "type": "Enum[start, stop, restart, status, enable, disable]"
     },
     "name": {
       "description": "The name of the service to operate on.",

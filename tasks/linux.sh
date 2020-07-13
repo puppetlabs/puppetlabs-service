@@ -21,7 +21,7 @@ done
 
 # Verify only allowable actions are specified
 case "$action" in
-  "start"|"stop"|"restart"|"status");;
+  "start"|"stop"|"restart"|"status"|"enable"|"disable");;
   *) validation_error "'${action}' action not supported for linux.sh"
 esac
 
@@ -37,11 +37,12 @@ case "$available_manager" in
     # sample output: "MainPID=23377,LoadState=loaded,ActiveState=active"
     cmd_out="$("$service" "show" "$name" -p LoadState -p MainPID -p ActiveState --no-pager | paste -sd ',' -)"
 
-    if [[ $action != "status" ]]; then
-      success "{ \"status\": \"${cmd_out}\" }"
-    else
+    $cmds = ("status", "enable", "disable")
+    if [[ " ${cmds[@]} " =~ " ${action} " ]]; then
       enabled_out="$("$service" "is-enabled" "$name")"
       success "{ \"status\": \"${cmd_out}\", \"enabled\": \"${enabled_out}\" }"
+    else
+      success "{ \"status\": \"${cmd_out}\" }"
     fi
     ;;
 
