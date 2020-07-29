@@ -1,8 +1,6 @@
 # run a test task
 require 'spec_helper_acceptance'
 
-sysv = (os[:family] == 'redhat' && os[:release].to_i == 6) ||
-       (os[:family] == 'debian' && os[:release].to_i == 14)
 describe 'linux service task', unless: os[:family] == 'windows' do
   package_to_use = if os[:family] == 'redhat'
                      'httpd'
@@ -38,23 +36,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     it "restart #{package_to_use}" do
       result = run_bolt_task('service::linux', 'action' => 'restart', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{ActiveState=active|running})
-    end
-  end
-
-  describe 'enable action', unless: sysv do
-    it "enable #{package_to_use}" do
-      result = run_bolt_task('service::linux', 'action' => 'enable', 'name' => package_to_use)
-      expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('enabled' => 'enabled')
-    end
-  end
-
-  describe 'disable action', unless: sysv do
-    it "disable #{package_to_use}" do
-      result = run_bolt_task('service::linux', 'action' => 'disable', 'name' => package_to_use)
-      expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('enabled' => 'disabled')
+      expect(result['result']).to include('status' => %r{ActiveState=active|running|reloading})
     end
   end
 
@@ -86,7 +68,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
       params = { 'action' => 'restart', 'name' => package_to_use }
       result = run_bolt_task('service', params, inventory_file: temp_inventory_file)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{ActiveState=active|running})
+      expect(result['result']).to include('status' => %r{ActiveState=active|running|reloading})
     end
   end
 end
