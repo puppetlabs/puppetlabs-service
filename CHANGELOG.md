@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.3.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.3.0) (2020-07-24)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v1.2.0...v1.3.0)
+
+### Added
+
+- (maint) Add enable and disable action for \*nix Bolt task [\#151](https://github.com/puppetlabs/puppetlabs-service/pull/151) 
+
 ## [v1.2.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.2.0) (2019-12-12)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v1.1.0...v1.2.0)
