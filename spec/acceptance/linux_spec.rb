@@ -18,6 +18,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     it "stop #{package_to_use}" do
       result = run_bolt_task('service::linux', 'action' => 'stop', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
+      sleep(40)
       # The additional complexity in this matcher is to support Ubuntu 14.04
       # For some reason it returns `service` instead of `systemctl` information.
       expect(result['result']).to include('status' => %r{(ActiveState=(inactive|stop)| is (not running|stopped))})
