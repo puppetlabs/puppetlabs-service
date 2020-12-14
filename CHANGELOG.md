@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.4.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.4.0) (2020-12-14)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/1.3.0...v1.4.0)
+
+### Added
+
+- pdksync - \(feat\) - Add support for Puppet 7 [\#162](https://github.com/puppetlabs/puppetlabs-service/pull/162) ([daianamezdrea](https://github.com/daianamezdrea))
+- pdksync - \(IAC-973\) - Update travis/appveyor to run on new default branch `main` [\#154](https://github.com/puppetlabs/puppetlabs-service/pull/154) ([david22swan](https://github.com/david22swan))
+
 ## [v1.3.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.3.0) (2020-07-24)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v1.2.0...v1.3.0)
@@ -124,7 +133,7 @@ This release uses the PDK convert functionality which in return makes the module
 ## Release 0.1.1
 This is the initial release of the service task.
 
-## Features
+## Features
 - Provides the following actions start, stop, restart, enable, disable, status.
 - Provider can optionally be specified.
 
