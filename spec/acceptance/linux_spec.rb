@@ -30,7 +30,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
     it "start #{package_to_use}" do
       result = run_bolt_task('service::linux', 'action' => 'start', 'name' => package_to_use)
       # RedHat 8 takes longer time to start the service
-      if result['result']['status'].match? %r{ActiveState=reloading}
+      if result['result']['status'].include?('ActiveState=reloading')
         sleep(30)
         result = run_bolt_task('service::linux', 'action' => 'start', 'name' => package_to_use)
       end
