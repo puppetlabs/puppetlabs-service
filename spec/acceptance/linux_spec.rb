@@ -28,11 +28,17 @@ describe 'linux service task', unless: os[:family] == 'windows' do
 
   describe 'start action' do
     it "start #{package_to_use}" do
-      result = run_bolt_task('service::linux', 'action' => 'start', 'name' => package_to_use)
-      # RedHat 8 takes longer time to start the service
-      if result['result']['status'].include?('ActiveState=reloading')
-        sleep(30)
+      result = {}
+      # Retry mechanism for EL6 service start
+      5.times do
         result = run_bolt_task('service::linux', 'action' => 'start', 'name' => package_to_use)
+        # RedHat 8 takes longer time to start the service
+        if result['result']['status'].include?('ActiveState=reloading')
+          sleep(30)
+          result = run_bolt_task('service::linux', 'action' => 'start', 'name' => package_to_use)
+        end
+        break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+        sleep(30)
       end
       expect(result.exit_code).to eq(0)
       expect(result['result']).to include('status' => %r{ActiveState=active|running})
@@ -41,7 +47,13 @@ describe 'linux service task', unless: os[:family] == 'windows' do
 
   describe 'restart action' do
     it "restart #{package_to_use}" do
-      result = run_bolt_task('service::linux', 'action' => 'restart', 'name' => package_to_use)
+      result = {}
+      # Retry mechanism for EL6 service restart locking failures
+      8.times do
+        result = run_bolt_task('service::linux', 'action' => 'restart', 'name' => package_to_use)
+        break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+        sleep(30)
+      end
       expect(result.exit_code).to eq(0)
       expect(result['result']).to include('status' => %r{ActiveState=active|running|reloading})
     end
@@ -73,7 +85,12 @@ describe 'linux service task', unless: os[:family] == 'windows' do
 
     it 'does not use the ruby task' do
       params = { 'action' => 'restart', 'name' => package_to_use }
-      result = run_bolt_task('service', params, inventory_file: temp_inventory_file)
+      result = {}
+      8.times do
+        result = run_bolt_task('service', params, inventory_file: temp_inventory_file)
+        break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+        sleep(30)
+      end
       expect(result.exit_code).to eq(0)
       expect(result['result']).to include('status' => %r{ActiveState=active|running|reloading})
     end
