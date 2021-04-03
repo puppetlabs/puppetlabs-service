@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-service",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "author": "puppetlabs",
   "summary": "Tasks that manipulate a service",
   "license": "Apache-2.0",
