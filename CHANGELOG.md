@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v2.0.0](https://github.com/puppetlabs/puppetlabs-service/tree/v2.0.0) (2021-03-03)
+## [v2.0.0](https://github.com/puppetlabs/puppetlabs-service/tree/v2.0.0) (2021-03-04)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v1.4.0...v2.0.0)
 
@@ -51,10 +51,6 @@ All notable changes to this project will be documented in this file. The format 
 - \(FM-8159\) Add Windows Server 2019 support [\#98](https://github.com/puppetlabs/puppetlabs-service/pull/98) ([eimlav](https://github.com/eimlav))
 - \(FM-8047\) Add RedHat8 as supported OS [\#97](https://github.com/puppetlabs/puppetlabs-service/pull/97) ([michaeltlombardi](https://github.com/michaeltlombardi))
 
-### Fixed
-
-- pdksync - \(FM-7655\) Fix rubygems-update for ruby \< 2.3 [\#62](https://github.com/puppetlabs/puppetlabs-service/pull/62) ([tphoney](https://github.com/tphoney))
-
 ## [1.0.0](https://github.com/puppetlabs/puppetlabs-service/tree/1.0.0) (2019-04-24)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v0.6.0...1.0.0)
@@ -69,8 +65,8 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
-- \(SEN-796\) Move extension metadata [\#86](https://github.com/puppetlabs/puppetlabs-service/pull/86) ([conormurraypuppet](https://github.com/conormurraypuppet))
-- \(SEN-796\) Add discovery extension metadata [\#85](https://github.com/puppetlabs/puppetlabs-service/pull/85) ([conormurraypuppet](https://github.com/conormurraypuppet))
+- \(SEN-796\) Move extension metadata [\#86](https://github.com/puppetlabs/puppetlabs-service/pull/86) ([conormurray95](https://github.com/conormurray95))
+- \(SEN-796\) Add discovery extension metadata [\#85](https://github.com/puppetlabs/puppetlabs-service/pull/85) ([conormurray95](https://github.com/conormurray95))
 - \(BOLT-1103\) Unify output of task implementations [\#83](https://github.com/puppetlabs/puppetlabs-service/pull/83) ([donoghuc](https://github.com/donoghuc))
 
 ### Fixed
@@ -88,6 +84,7 @@ All notable changes to this project will be documented in this file. The format 
 ### Fixed
 
 - \(MODULES-8420\) Move to GEM\_BOLT pattern [\#65](https://github.com/puppetlabs/puppetlabs-service/pull/65) ([donoghuc](https://github.com/donoghuc))
+- pdksync - \(FM-7655\) Fix rubygems-update for ruby \< 2.3 [\#62](https://github.com/puppetlabs/puppetlabs-service/pull/62) ([tphoney](https://github.com/tphoney))
 
 ## [0.4.0](https://github.com/puppetlabs/puppetlabs-service/tree/0.4.0) (2018-09-28)
 
