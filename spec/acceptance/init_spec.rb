@@ -41,7 +41,7 @@ describe 'service task' do
       result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
       expect(result['result']).to include('status' => %r{running|Started}i)
-      expect(result['result']).to include('enabled' => %r{true|manual|automatic}i)
+      expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed}i)
     end
   end
 
@@ -56,7 +56,7 @@ describe 'service task' do
         result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
         expect(result.exit_code).to eq(0)
         expect(result['result']).to include('status' => %r{stopped}i)
-        expect(result['result']).to include('enabled' => %r{true|manual|automatic}i)
+        expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed}i)
       end
     end
   end
@@ -72,7 +72,7 @@ describe 'service task' do
         result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
         expect(result.exit_code).to eq(0)
         expect(result['result']).to include('status' => %r{running|Started}i)
-        expect(result['result']).to include('enabled' => %r{true|manual|automatic}i)
+        expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed}i)
       end
     end
   end
