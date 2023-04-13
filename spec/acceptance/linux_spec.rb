@@ -38,6 +38,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
           result = run_bolt_task('service::linux', 'action' => 'start', 'name' => package_to_use)
         end
         break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+
         sleep(30)
       end
       expect(result.exit_code).to eq(0)
@@ -52,6 +53,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
       8.times do
         result = run_bolt_task('service::linux', 'action' => 'restart', 'name' => package_to_use)
         break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+
         sleep(30)
       end
       expect(result.exit_code).to eq(0)
@@ -89,6 +91,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
       8.times do
         result = run_bolt_task('service', params, inventory_file: temp_inventory_file)
         break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+
         sleep(30)
       end
       expect(result.exit_code).to eq(0)
