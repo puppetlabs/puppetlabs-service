@@ -22,20 +22,6 @@ RSpec/MultipleExpectations:
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
-# Style/NegatedIfElseCondition:
-#   Exclude:
-#     - 'spec/acceptance/init_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: implicit, explicit
-Style/RescueStandardError:
-  Exclude:
-    - 'spec/spec_helper.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyleForMultiline.
 # SupportedStylesForMultiline: comma, consistent_comma, no_comma
 Style/TrailingCommaInHashLiteral:
