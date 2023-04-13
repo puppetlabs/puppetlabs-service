@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v3.0.0](https://github.com/puppetlabs/puppetlabs-service/tree/v3.0.0) - 2023-04-13
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v2.3.1...v3.0.0)
+
+### Changed
+- (CONT-799) - add puppet 8/drop puppet 6 [#233](https://github.com/puppetlabs/puppetlabs-service/pull/233) ([jordanbreen28](https://github.com/jordanbreen28))
+
 ## [v2.3.1](https://github.com/puppetlabs/puppetlabs-service/tree/v2.3.1) - 2023-02-10
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v2.3.0...v2.3.1)
@@ -157,59 +164,38 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.2.0...0.3.0)
 
-### Other
+### Added
 
-- Release prep 0.3.0 [#30](https://github.com/puppetlabs/puppetlabs-service/pull/30) ([hunner](https://github.com/hunner))
-- (enhancement) add restart to linux task [#28](https://github.com/puppetlabs/puppetlabs-service/pull/28) ([tphoney](https://github.com/tphoney))
 - (MODULES-6800) Add Windows service management [#27](https://github.com/puppetlabs/puppetlabs-service/pull/27) ([Iristyle](https://github.com/Iristyle))
-- 0.2.0 Mergeback [#26](https://github.com/puppetlabs/puppetlabs-service/pull/26) ([david22swan](https://github.com/david22swan))
 - (feature) task for linux services (no agent) [#23](https://github.com/puppetlabs/puppetlabs-service/pull/23) ([tphoney](https://github.com/tphoney))
 
 ## [0.2.0](https://github.com/puppetlabs/puppetlabs-service/tree/0.2.0) - 2018-03-06
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.1.3...0.2.0)
 
-### Other
+### Fixed
 
-- Release prep 0.2.0 [#25](https://github.com/puppetlabs/puppetlabs-service/pull/25) ([pmcmaw](https://github.com/pmcmaw))
-- (MODULES-6464) - PDK Convert 1.4.1 [#24](https://github.com/puppetlabs/puppetlabs-service/pull/24) ([pmcmaw](https://github.com/pmcmaw))
-- (maint) - modulesync [#22](https://github.com/puppetlabs/puppetlabs-service/pull/22) ([tphoney](https://github.com/tphoney))
 - Test cleanup - disable sysklogd on Linux to allow testing against rsy… [#21](https://github.com/puppetlabs/puppetlabs-service/pull/21) ([willmeek](https://github.com/willmeek))
-- Further test cleanup [#19](https://github.com/puppetlabs/puppetlabs-service/pull/19) ([willmeek](https://github.com/willmeek))
-- Test Cleanup [#18](https://github.com/puppetlabs/puppetlabs-service/pull/18) ([willmeek](https://github.com/willmeek))
-- (MODULES-5945) - Update modules to modulepath [#17](https://github.com/puppetlabs/puppetlabs-service/pull/17) ([pmcmaw](https://github.com/pmcmaw))
 
 ## [0.1.3](https://github.com/puppetlabs/puppetlabs-service/tree/0.1.3) - 2017-10-10
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.1.2...0.1.3)
 
-### Other
+### Fixed
 
 - FM-6501 service attribute is now name. [#16](https://github.com/puppetlabs/puppetlabs-service/pull/16) ([tphoney](https://github.com/tphoney))
-- Update requirements boilerplate [#15](https://github.com/puppetlabs/puppetlabs-service/pull/15) ([hunner](https://github.com/hunner))
-- (maint) remove summary [#14](https://github.com/puppetlabs/puppetlabs-service/pull/14) ([adreyer](https://github.com/adreyer))
-- 0.1.3 release prep [#13](https://github.com/puppetlabs/puppetlabs-service/pull/13) ([tphoney](https://github.com/tphoney))
-- Sync readmes [#12](https://github.com/puppetlabs/puppetlabs-service/pull/12) ([hunner](https://github.com/hunner))
 
 ## [0.1.2](https://github.com/puppetlabs/puppetlabs-service/tree/0.1.2) - 2017-10-04
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.1.1...0.1.2)
 
-### Other
+### Fixed
 
-- Release 0.1.2 [#11](https://github.com/puppetlabs/puppetlabs-service/pull/11) ([hunner](https://github.com/hunner))
 - (FM-6481) Fix project_name in locales config [#10](https://github.com/puppetlabs/puppetlabs-service/pull/10) ([MikaelSmith](https://github.com/MikaelSmith))
-- (FM-6448) Add metadata description [#9](https://github.com/puppetlabs/puppetlabs-service/pull/9) ([hunner](https://github.com/hunner))
-- (maint) Update the helper to be like package [#8](https://github.com/puppetlabs/puppetlabs-service/pull/8) ([hunner](https://github.com/hunner))
 
 ## [0.1.1](https://github.com/puppetlabs/puppetlabs-service/tree/0.1.1) - 2017-09-20
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/0.1.0...0.1.1)
-
-### Other
-
-- release prep for 0.1.1 [#7](https://github.com/puppetlabs/puppetlabs-service/pull/7) ([tphoney](https://github.com/tphoney))
-- edit README for incl in PE 2017.3 [#6](https://github.com/puppetlabs/puppetlabs-service/pull/6) ([jbondpdx](https://github.com/jbondpdx))
 
 ## [0.1.0](https://github.com/puppetlabs/puppetlabs-service/tree/0.1.0) - 2017-09-18
 
