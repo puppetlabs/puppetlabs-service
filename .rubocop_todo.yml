@@ -1,15 +1,8 @@
-# Offense count: 4
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Lint/NonAtomicFileOperation:
-#   Exclude:
-#     - 'spec/acceptance/linux_spec.rb'
-#     - 'spec/acceptance/windows_spec.rb'
-
 # Offense count: 3
 # This cop supports unsafe autocorrection (--autocorrect-all).
-Performance/StringInclude:
-  Exclude:
-    - 'spec/acceptance/linux_spec.rb'
+# Performance/StringInclude:
+#   Exclude:
+#     - 'spec/acceptance/linux_spec.rb'
 
 # Offense count: 3
 # Configuration parameters: IgnoredMetadata.
