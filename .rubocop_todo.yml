@@ -22,9 +22,9 @@ RSpec/MultipleExpectations:
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
-Style/NegatedIfElseCondition:
-  Exclude:
-    - 'spec/acceptance/init_spec.rb'
+# Style/NegatedIfElseCondition:
+#   Exclude:
+#     - 'spec/acceptance/init_spec.rb'
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).

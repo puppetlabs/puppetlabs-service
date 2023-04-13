@@ -6,17 +6,17 @@ require 'spec_helper_acceptance'
 describe 'service task' do
   package_to_use = ''
   before(:all) do
-    if os[:family] != 'windows'
+    if os[:family] == 'windows'
+      package_to_use = 'W32Time'
+      params = { 'action' => 'start', 'name' => package_to_use }
+      run_bolt_task('service', params)
+    else
       package_to_use = if os[:family] == 'redhat'
                          'httpd'
                        else
                          'apache2'
                        end
       apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
-    else
-      package_to_use = 'W32Time'
-      params = { 'action' => 'start', 'name' => package_to_use }
-      run_bolt_task('service', params)
     end
   end
 
