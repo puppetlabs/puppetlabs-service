@@ -1,0 +1,21 @@
+# Offense count: 3
+# Configuration parameters: IgnoredMetadata.
+RSpec/DescribeClass:
+  Exclude:
+    - '**/spec/features/**/*'
+    - '**/spec/requests/**/*'
+    - '**/spec/routing/**/*'
+    - '**/spec/system/**/*'
+    - '**/spec/views/**/*'
+    - 'spec/acceptance/init_spec.rb'
+    - 'spec/acceptance/linux_spec.rb'
+    - 'spec/acceptance/windows_spec.rb'
+
+# Offense count: 11
+# Configuration parameters: CountAsOne.
+RSpec/ExampleLength:
+  Max: 12
+
+# Offense count: 16
+RSpec/MultipleExpectations:
+  Max: 5

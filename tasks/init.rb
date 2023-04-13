@@ -49,7 +49,7 @@ def disable(provider)
   end
 end
 
-params = JSON.parse(STDIN.read)
+params = JSON.parse($stdin.read)
 name = params['name']
 provider = params['provider']
 action = params['action']

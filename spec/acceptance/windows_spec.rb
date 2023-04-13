@@ -5,7 +5,7 @@ require 'spec_helper_acceptance'
 
 describe 'windows service task', if: os[:family] == 'windows' do
   package_to_use = 'W32Time'
-  temp_inventory_file = "#{ENV['TARGET_HOST']}.yaml"
+  temp_inventory_file = "#{ENV.fetch('TARGET_HOST', nil)}.yaml"
 
   before(:all) do
     # Ensure the service is enabled before interacting.
@@ -51,12 +51,12 @@ describe 'windows service task', if: os[:family] == 'windows' do
 
   context 'when puppet-agent feature not available on target', if: (ENV['TARGET_HOST'] != 'localhost' && os[:family] == 'windows') do
     before(:all) do
-      inventory_hash = remove_feature_from_node(inventory_hash_from_inventory_file, 'puppet-agent', ENV['TARGET_HOST'])
+      inventory_hash = remove_feature_from_node(inventory_hash_from_inventory_file, 'puppet-agent', ENV.fetch('TARGET_HOST', nil))
       write_to_inventory_file(inventory_hash, temp_inventory_file)
     end
 
     after(:all) do
-      File.delete(temp_inventory_file) if File.exist?(temp_inventory_file)
+      FileUtils.rm_f(temp_inventory_file)
     end
 
     it 'enable action fails' do

@@ -10,7 +10,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
                      'apache2'
                    end
 
-  temp_inventory_file = "#{ENV['TARGET_HOST']}.yaml"
+  temp_inventory_file = "#{ENV.fetch('TARGET_HOST', nil)}.yaml"
 
   before(:all) do
     apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
@@ -37,7 +37,8 @@ describe 'linux service task', unless: os[:family] == 'windows' do
           sleep(30)
           result = run_bolt_task('service::linux', 'action' => 'start', 'name' => package_to_use)
         end
-        break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+        break unless result['stdout'].include?('httpd dead but subsys locked')
+
         sleep(30)
       end
       expect(result.exit_code).to eq(0)
@@ -51,7 +52,8 @@ describe 'linux service task', unless: os[:family] == 'windows' do
       # Retry mechanism for EL6 service restart locking failures
       8.times do
         result = run_bolt_task('service::linux', 'action' => 'restart', 'name' => package_to_use)
-        break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+        break unless result['stdout'].include?('httpd dead but subsys locked')
+
         sleep(30)
       end
       expect(result.exit_code).to eq(0)
@@ -74,13 +76,13 @@ describe 'linux service task', unless: os[:family] == 'windows' do
 
   context 'when puppet-agent feature not available on target' do
     before(:all) do
-      target = targeting_localhost? ? 'litmus_localhost' : ENV['TARGET_HOST']
+      target = targeting_localhost? ? 'litmus_localhost' : ENV.fetch('TARGET_HOST', nil)
       inventory_hash = remove_feature_from_node(inventory_hash_from_inventory_file, 'puppet-agent', target)
       write_to_inventory_file(inventory_hash, temp_inventory_file)
     end
 
     after(:all) do
-      File.delete(temp_inventory_file) if File.exist?(temp_inventory_file)
+      FileUtils.rm_f(temp_inventory_file)
     end
 
     it 'does not use the ruby task' do
@@ -88,7 +90,8 @@ describe 'linux service task', unless: os[:family] == 'windows' do
       result = {}
       8.times do
         result = run_bolt_task('service', params, inventory_file: temp_inventory_file)
-        break unless %r{httpd dead but subsys locked}.match?(result['stdout'])
+        break unless result['stdout'].include?('httpd dead but subsys locked')
+
         sleep(30)
       end
       expect(result.exit_code).to eq(0)
