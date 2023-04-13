@@ -56,7 +56,7 @@ describe 'windows service task', if: os[:family] == 'windows' do
     end
 
     after(:all) do
-      File.delete(temp_inventory_file) if File.exist?(temp_inventory_file)
+      FileUtils.rm_f(temp_inventory_file)
     end
 
     it 'enable action fails' do
