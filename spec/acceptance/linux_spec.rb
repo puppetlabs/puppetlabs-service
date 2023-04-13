@@ -10,7 +10,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
                      'apache2'
                    end
 
-  temp_inventory_file = "#{ENV['TARGET_HOST']}.yaml"
+  temp_inventory_file = "#{ENV.fetch('TARGET_HOST', nil)}.yaml"
 
   before(:all) do
     apply_manifest("package { \"#{package_to_use}\": ensure => present, }")
@@ -76,7 +76,7 @@ describe 'linux service task', unless: os[:family] == 'windows' do
 
   context 'when puppet-agent feature not available on target' do
     before(:all) do
-      target = targeting_localhost? ? 'litmus_localhost' : ENV['TARGET_HOST']
+      target = targeting_localhost? ? 'litmus_localhost' : ENV.fetch('TARGET_HOST', nil)
       inventory_hash = remove_feature_from_node(inventory_hash_from_inventory_file, 'puppet-agent', target)
       write_to_inventory_file(inventory_hash, temp_inventory_file)
     end
