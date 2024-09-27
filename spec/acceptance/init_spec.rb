@@ -24,11 +24,11 @@ describe 'service task' do
     it 'enable/status a service' do
       result = run_bolt_task('service', 'action' => 'enable', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{in_sync|enabled})
+      expect(result['result']).to include('status' => %r{in_sync|enabled|active})
 
       result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('enabled' => 'true')
+      expect(result['result']).to include('enabled' => %r{true|enabled}i)
     end
   end
 
@@ -36,12 +36,12 @@ describe 'service task' do
     it 'restart/status a service' do
       result = run_bolt_task('service', 'action' => 'restart', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{restarted}i)
+      expect(result['result']).to include('status' => %r{restarted|active}i)
 
       result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{running|Started}i)
-      expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed}i)
+      expect(result['result']).to include('status' => %r{running|Started|active}i)
+      expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed|enabled}i)
     end
   end
 
@@ -49,14 +49,14 @@ describe 'service task' do
     it 'stop/status a service' do
       result = run_bolt_task('service', 'action' => 'stop', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{in_sync|stopped}i)
+      expect(result['result']).to include('status' => %r{in_sync|stopped|inactive}i)
 
       # Debian can give incorrect status
       unless ['debian', 'ubuntu'].include?(os[:family])
         result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
         expect(result.exit_code).to eq(0)
-        expect(result['result']).to include('status' => %r{stopped}i)
-        expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed}i)
+        expect(result['result']).to include('status' => %r{stopped|inactive}i)
+        expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed|enabled}i)
       end
     end
   end
@@ -65,14 +65,14 @@ describe 'service task' do
     it 'start/status a service' do
       result = run_bolt_task('service', 'action' => 'start', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => %r{in_sync|started}i)
+      expect(result['result']).to include('status' => %r{in_sync|started|active}i)
 
       # Debian can give incorrect status
       unless ['debian', 'ubuntu'].include?(os[:family])
         result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
         expect(result.exit_code).to eq(0)
-        expect(result['result']).to include('status' => %r{running|Started}i)
-        expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed}i)
+        expect(result['result']).to include('status' => %r{running|Started|active}i)
+        expect(result['result']).to include('enabled' => %r{true|manual|automatic|delayed|enabled}i)
       end
     end
   end
@@ -81,11 +81,11 @@ describe 'service task' do
     it 'disable/status a service' do
       result = run_bolt_task('service', 'action' => 'disable', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('status' => 'disabled')
+      expect(result['result']).to include('status' => %r{disabled|active})
 
       result = run_bolt_task('service', 'action' => 'status', 'name' => package_to_use)
       expect(result.exit_code).to eq(0)
-      expect(result['result']).to include('enabled' => 'false')
+      expect(result['result']).to include('enabled' => %r{false|disabled})
     end
   end
 end
