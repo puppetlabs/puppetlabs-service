@@ -5,11 +5,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v3.1.0](https://github.com/puppetlabs/puppetlabs-service/tree/v3.1.0) - 2024-12-17
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v3.0.0...v3.1.0)
+
+### Added
+
+- (CAT-2124) Add support for Ubuntu 24 [#257](https://github.com/puppetlabs/puppetlabs-service/pull/257) ([skyamgarp](https://github.com/skyamgarp))
+- (CAT-2101) Add support for Debian-12 [#256](https://github.com/puppetlabs/puppetlabs-service/pull/256) ([skyamgarp](https://github.com/skyamgarp))
+
+### Fixed
+
+- (CAT-2180) Upgrade rexml to address CVE-2024-49761 [#259](https://github.com/puppetlabs/puppetlabs-service/pull/259) ([amitkarsale](https://github.com/amitkarsale))
+
 ## [v3.0.0](https://github.com/puppetlabs/puppetlabs-service/tree/v3.0.0) - 2023-04-13
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v2.3.1...v3.0.0)
 
 ### Changed
+
 - (CONT-799) - add puppet 8/drop puppet 6 [#233](https://github.com/puppetlabs/puppetlabs-service/pull/233) ([jordanbreen28](https://github.com/jordanbreen28))
 
 ## [v2.3.1](https://github.com/puppetlabs/puppetlabs-service/tree/v2.3.1) - 2023-02-10
@@ -65,6 +79,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v1.4.0...v2.0.0)
 
 ### Changed
+
 - pdksync - Remove Puppet 5 from testing and bump minimal version to 6.0.0 [#172](https://github.com/puppetlabs/puppetlabs-service/pull/172) ([carabasdaniel](https://github.com/carabasdaniel))
 
 ## [v1.4.0](https://github.com/puppetlabs/puppetlabs-service/tree/v1.4.0) - 2020-12-14
@@ -113,6 +128,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v0.6.0...1.0.0)
 
 ### Changed
+
 - pdksync - (MODULES-8444) - Raise lower Puppet bound [#91](https://github.com/puppetlabs/puppetlabs-service/pull/91) ([david22swan](https://github.com/david22swan))
 
 ## [v0.6.0](https://github.com/puppetlabs/puppetlabs-service/tree/v0.6.0) - 2019-04-09
