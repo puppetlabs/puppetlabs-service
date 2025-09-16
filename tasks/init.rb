@@ -54,7 +54,7 @@ name = params['name']
 provider = params['provider']
 action = params['action']
 
-opts = { name: name }
+opts = { name: }
 opts[:provider] = provider if provider
 
 begin
