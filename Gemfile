@@ -51,6 +51,7 @@ group :development do
   gem "parallel_tests", '= 3.12.1',              require: false
   gem "pry", '~> 0.10',                          require: false
   gem "simplecov-console", '~> 0.9',             require: false
+  gem "simplecov", '~> 0.22',                    require: false
   gem "puppet-debugger", '~> 1.6',               require: false
   gem "rubocop", '~> 1.50.0',                    require: false
   gem "rubocop-performance", '= 1.16.0',         require: false
