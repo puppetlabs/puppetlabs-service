@@ -65,9 +65,9 @@ $stdin.singleton_class.remove_method(:read)
 
 # 9. Restore JSON.parse via the saved UnboundMethod — this avoids the
 #    module_function copy-removal problem that `remove_method` would cause.
-_orig_json_parse = original_json_parse
+orig_json_parse = original_json_parse
 JSON.define_singleton_method(:parse) do |*args, **kwargs, &blk|
-  _orig_json_parse.call(*args, **kwargs, &blk)
+  orig_json_parse.call(*args, **kwargs, &blk)
 end
 
 # ---------------------------------------------------------------------------
@@ -75,7 +75,7 @@ end
 # ---------------------------------------------------------------------------
 
 describe 'tasks/init.rb' do
-  let(:provider) { double('provider') }
+  let(:provider) { double('provider') } # rubocop:disable RSpec/VerifiedDoubles
 
   # -------------------------------------------------------------------------
   # start
