@@ -12,7 +12,6 @@ require 'spec_helper'
 # ---------------------------------------------------------------------------
 
 # 1. Prevent $stdin.read from blocking.
-original_stdin_read = $stdin.method(:read) rescue nil
 $stdin.define_singleton_method(:read) do |*|
   '{"name":"noop","action":"status"}'
 end
@@ -47,19 +46,15 @@ Puppet.const_set(:Type, noop_puppet_type_mod)
 
 # 4. Stub Kernel#exit so the dispatch block's `exit 0` does not kill RSpec.
 module KernelExitStub
-  def exit(*) = nil  # swallow exit during file load
+  def exit(*) = nil # swallow exit during file load
 end
 Object.prepend(KernelExitStub)
 
 # 5. Require the task file — the dispatch block now runs harmlessly.
 require_relative '../../../tasks/init'
 
-# 6. Restore exit by redefining KernelExitStub#exit to delegate to super.
-module KernelExitStub
-  def exit(*args)
-    super
-  end
-end
+# 6. Restore exit — use define_method to avoid Lint/DuplicateMethods cop.
+KernelExitStub.define_method(:exit) { |*args| super(*args) }
 
 # 7. Restore Puppet::Type.
 Puppet.send(:remove_const, :Type)
@@ -87,7 +82,7 @@ describe 'tasks/init.rb' do
   # -------------------------------------------------------------------------
   describe '#start' do
     context 'when service is already running' do
-      before { allow(provider).to receive(:status).and_return(:running) }
+      before(:each) { allow(provider).to receive(:status).and_return(:running) }
 
       it 'returns in_sync without calling provider.start' do
         expect(start(provider)).to eq({ status: 'in_sync' })
@@ -95,7 +90,7 @@ describe 'tasks/init.rb' do
     end
 
     context 'when service is stopped' do
-      before do
+      before(:each) do
         allow(provider).to receive(:status).and_return(:stopped)
         allow(provider).to receive(:start)
       end
@@ -111,7 +106,7 @@ describe 'tasks/init.rb' do
   # -------------------------------------------------------------------------
   describe '#stop' do
     context 'when service is already stopped' do
-      before { allow(provider).to receive(:status).and_return(:stopped) }
+      before(:each) { allow(provider).to receive(:status).and_return(:stopped) }
 
       it 'returns in_sync without calling provider.stop' do
         expect(stop(provider)).to eq({ status: 'in_sync' })
@@ -119,7 +114,7 @@ describe 'tasks/init.rb' do
     end
 
     context 'when service is running' do
-      before do
+      before(:each) do
         allow(provider).to receive(:status).and_return(:running)
         allow(provider).to receive(:stop)
       end
@@ -134,7 +129,7 @@ describe 'tasks/init.rb' do
   # restart
   # -------------------------------------------------------------------------
   describe '#restart' do
-    before { allow(provider).to receive(:restart) }
+    before(:each) { allow(provider).to receive(:restart) }
 
     it 'restarts the service and returns restarted' do
       expect(restart(provider)).to eq({ status: 'restarted' })
@@ -145,7 +140,7 @@ describe 'tasks/init.rb' do
   # status
   # -------------------------------------------------------------------------
   describe '#status' do
-    before do
+    before(:each) do
       allow(provider).to receive(:status).and_return(:running)
       allow(provider).to receive(:enabled?).and_return('true')
     end
@@ -160,7 +155,7 @@ describe 'tasks/init.rb' do
   # -------------------------------------------------------------------------
   describe '#enable' do
     context 'when service is already enabled (enabled? returns "true")' do
-      before { allow(provider).to receive(:enabled?).and_return('true') }
+      before(:each) { allow(provider).to receive(:enabled?).and_return('true') }
 
       it 'returns in_sync without calling provider.enable' do
         expect(enable(provider)).to eq({ status: 'in_sync' })
@@ -168,7 +163,7 @@ describe 'tasks/init.rb' do
     end
 
     context 'when service is disabled (enabled? returns "false")' do
-      before do
+      before(:each) do
         allow(provider).to receive(:enabled?).and_return('false')
         allow(provider).to receive(:enable)
       end
@@ -184,7 +179,7 @@ describe 'tasks/init.rb' do
   # -------------------------------------------------------------------------
   describe '#disable' do
     context 'when service is enabled (enabled? returns "true")' do
-      before do
+      before(:each) do
         allow(provider).to receive(:enabled?).and_return('true')
         allow(provider).to receive(:disable)
       end
@@ -195,7 +190,7 @@ describe 'tasks/init.rb' do
     end
 
     context 'when service is already disabled (enabled? returns "false")' do
-      before { allow(provider).to receive(:enabled?).and_return('false') }
+      before(:each) { allow(provider).to receive(:enabled?).and_return('false') }
 
       it 'returns in_sync without calling provider.disable' do
         expect(disable(provider)).to eq({ status: 'in_sync' })
