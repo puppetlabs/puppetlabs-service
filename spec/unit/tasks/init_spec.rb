@@ -41,7 +41,7 @@ noop_puppet_type_mod = Module.new do
 end
 
 original_puppet_type = Puppet::Type
-Puppet.send(:remove_const, :Type)
+Puppet.send(:remove_const, :Type) # rubocop:disable RSpec/RemoveConst
 Puppet.const_set(:Type, noop_puppet_type_mod)
 
 # 4. Stub Kernel#exit so the dispatch block's `exit 0` does not kill RSpec.
@@ -57,7 +57,7 @@ require_relative '../../../tasks/init'
 KernelExitStub.define_method(:exit) { |*args| super(*args) }
 
 # 7. Restore Puppet::Type.
-Puppet.send(:remove_const, :Type)
+Puppet.send(:remove_const, :Type) # rubocop:disable RSpec/RemoveConst
 Puppet.const_set(:Type, original_puppet_type)
 
 # 8. Restore $stdin.read (remove the singleton method so the original is used).
@@ -141,8 +141,7 @@ describe 'tasks/init.rb' do
   # -------------------------------------------------------------------------
   describe '#status' do
     before(:each) do
-      allow(provider).to receive(:status).and_return(:running)
-      allow(provider).to receive(:enabled?).and_return('true')
+      allow(provider).to receive_messages(status: :running, enabled?: 'true')
     end
 
     it 'returns status and enabled? from the provider' do
