@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v4.0.0](https://github.com/puppetlabs/puppetlabs-service/tree/v4.0.0) - 2026-08-31
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v3.1.0...v4.0.0)
+
+### Changed
+
+- (CAT-2392) Puppetcore update / Drop support for puppet 7 [#263](https://github.com/puppetlabs/puppetlabs-service/pull/263) ([LukasAud](https://github.com/LukasAud))
+
+### Added
+
+- (MODULES-11709) Add Puppet 9 support [#268](https://github.com/puppetlabs/puppetlabs-service/pull/268) ([imaqsood](https://github.com/imaqsood))
+
+### Fixed
+
+- Update link for contributing documentation [#264](https://github.com/puppetlabs/puppetlabs-service/pull/264) ([jst-cyr](https://github.com/jst-cyr))
+
+### Other
+
+- (CAT-2296) Update github runner image to ubuntu-24.04 [#262](https://github.com/puppetlabs/puppetlabs-service/pull/262) ([shubhamshinde360](https://github.com/shubhamshinde360))
+
 ## [v3.1.0](https://github.com/puppetlabs/puppetlabs-service/tree/v3.1.0) - 2024-12-17
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-service/compare/v3.0.0...v3.1.0)
